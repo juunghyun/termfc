@@ -1,0 +1,49 @@
+{
+  "name": "termfc",
+  "version": "0.2.0",
+  "description": "⚽ Live football text commentary in your terminal — FIFA World Cup 2026",
+  "type": "module",
+  "bin": {
+    "termfc": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juunghyun/termfc.git"
+  },
+  "keywords": [
+    "football",
+    "soccer",
+    "worldcup",
+    "world-cup-2026",
+    "cli",
+    "terminal",
+    "livescore",
+    "live-commentary",
+    "tui"
+  ],
+  "author": "juunghyun",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "env-paths": "^3.0.0",
+    "string-width": "^7.2.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}
