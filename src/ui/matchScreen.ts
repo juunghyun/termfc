@@ -13,19 +13,21 @@ import {
 import { phaseLabel } from "../core/state.js";
 import { liveWinProb, type WinProb } from "../core/winprob.js";
 import type { NetInfo } from "../engine/polling.js";
+import { normalizeEventText, normalizePlayerName } from "../core/text.js";
 import {
   bgYellow,
   bold,
-  clearScreen,
   cyan,
   dim,
   enterAltScreen,
   gray,
   green,
   leaveAltScreen,
+  paintFrame,
   red,
   term,
   truncate,
+  width,
   yellow,
   center,
 } from "./ansi.js";
@@ -39,6 +41,22 @@ export interface MatchFeedLike extends EventEmitter {
   start(): void;
   stop(): void;
 }
+
+/** Sideless whistle/flow events render centered, like section markers. */
+const SYSTEM_TYPES: ReadonlySet<TimelineEvent["type"]> = new Set([
+  "PERIOD_START",
+  "PERIOD_END",
+  "FULLTIME",
+  "BREAK",
+  "RESUMED",
+]);
+
+/** Log entries are stored structured and formatted at render time, so
+ * alignment follows the current terminal width (and resizes). */
+type LogLine =
+  | { kind: "event"; e: TimelineEvent }
+  | { kind: "text"; text: string; align?: "left" | "center" }
+  | { kind: "sep" };
 
 export interface MatchScreenOptions {
   lang: Lang;
@@ -61,8 +79,8 @@ export class MatchScreen {
   private readonly l: Labels;
   private readonly clock: ClockInterpolator;
   private readonly controller: AnimationController;
-  private lines: string[] = [];
-  private pending: string[] = [];
+  private lines: LogLine[] = [];
+  private pending: LogLine[] = [];
   private state: MatchState | null = null;
   private net: NetInfo | null = null;
   private lastUpdateAt: number | null = null;
@@ -79,9 +97,8 @@ export class MatchScreen {
     this.l = labels(opts.lang);
     this.clock = new ClockInterpolator(undefined, opts.clockRate ?? 1);
     this.controller = new AnimationController((frame) => {
-      clearScreen(this.t.out);
       const pad = Math.max(0, Math.floor((this.t.rows() - frame.length) / 2));
-      this.t.out.write("\n".repeat(pad) + frame.join("\n") + "\n");
+      paintFrame(this.t.out, [...Array<string>(pad).fill(""), ...frame]);
     });
     if (match.phase !== "SCHEDULED") {
       this.clock.update({ minute: 0, phase: match.phase });
@@ -149,12 +166,18 @@ export class MatchScreen {
 
     this.feed.on("events", (events: TimelineEvent[]) => {
       this.opts.onEvents?.(events);
-      const formatted = events
-        .filter((e) => e.type !== "ASSIST" || e.text) // assists render as text lines too
-        .map((e) => this.formatEvent(e));
-      if (this.controller.mode === "ANIMATION") this.pending.push(...formatted);
+      const entries: LogLine[] = [];
+      for (const e of events) {
+        if (e.type === "ASSIST" && !e.text) continue; // assists render as text lines too
+        const isGoal =
+          e.type === "GOAL" || e.type === "PENALTY_GOAL" || e.type === "OWN_GOAL";
+        if (isGoal) entries.push({ kind: "sep" });
+        entries.push({ kind: "event", e });
+        if (isGoal) entries.push({ kind: "sep" });
+      }
+      if (this.controller.mode === "ANIMATION") this.pending.push(...entries);
       else {
-        this.lines.push(...formatted);
+        this.lines.push(...entries);
         this.render();
       }
     });
@@ -164,12 +187,13 @@ export class MatchScreen {
       const teamName = side ? this.match[side].name : undefined;
       const flag = side ? this.match[side].flag : "⚽";
       this.flashUntil = Date.now() + 6000;
-      this.flashText = e.player ? `GOAL! ${e.player}` : "GOAL!";
+      const player = e.player ? normalizePlayerName(e.player) : undefined;
+      this.flashText = player ? `GOAL! ${player}` : "GOAL!";
       if (this.opts.animations) {
         void this.controller
           .enqueue(
             goalFrames({
-              player: e.player,
+              player,
               teamName,
               flag,
               cols: this.t.cols(),
@@ -183,13 +207,17 @@ export class MatchScreen {
     });
 
     this.feed.on("cancelled", (e: TimelineEvent) => {
-      const line = `${dim(formatEventClock(e).padStart(7))}  ${red(`📺 ${this.l.goalCancelled} (${this.l.corrected})`)} ${dim(e.text ?? "")}`;
-      this.pushLine(line);
+      const line = `${dim(formatEventClock(e).padStart(7))}  ${red(`📺 ${this.l.goalCancelled} (${this.l.corrected})`)} ${dim(e.text ? normalizeEventText(e.text) : "")}`;
+      this.pushLine({ kind: "text", text: line });
     });
 
     this.feed.on("sourceSwitched", () => {
       this.sourceSwitchedLabel = true;
-      this.pushLine(yellow(`── ${this.l.sourceSwitched} ──`));
+      this.pushLine({
+        kind: "text",
+        text: yellow(`── ${this.l.sourceSwitched} ──`),
+        align: "center",
+      });
     });
 
     this.feed.on("net", (info: NetInfo) => {
@@ -203,7 +231,7 @@ export class MatchScreen {
     });
   }
 
-  private pushLine(line: string): void {
+  private pushLine(line: LogLine): void {
     if (this.controller.mode === "ANIMATION") this.pending.push(line);
     else {
       this.lines.push(line);
@@ -218,18 +246,52 @@ export class MatchScreen {
     }
   }
 
-  private formatEvent(e: TimelineEvent): string {
-    const clock = dim(formatEventClock(e).padStart(7));
+  private formatEvent(e: TimelineEvent, cols: number): string {
     const icon = EVENT_ICON[e.type] ?? "·";
-    let text = e.text ?? "";
+    let text = e.text ? normalizeEventText(e.text) : "";
     if (e.type === "GOAL" || e.type === "PENALTY_GOAL" || e.type === "OWN_GOAL")
       text = bold(yellow(text));
     else if (e.type === "RED") text = bold(red(text));
     else if (e.type === "YELLOW") text = yellow(text);
     else if (e.type === "PERIOD_START" || e.type === "PERIOD_END" || e.type === "FULLTIME")
       text = cyan(text);
-    else if (e.type === "UNKNOWN") text = dim(text);
-    return `${clock}  ${icon} ${text}`;
+    else if (e.type === "FOUL" || e.type === "OFFSIDE" || e.type === "UNKNOWN")
+      text = dim(text); // routine events recede so key moments stand out
+    if (SYSTEM_TYPES.has(e.type))
+      return center(`${dim(formatEventClock(e))} ${icon} ${text}`, cols);
+    const line = `${dim(formatEventClock(e).padStart(7))}  ${icon} ${text}`;
+    if (e.teamSide === "away") {
+      const pad = cols - 1 - width(line);
+      if (pad > 0) return " ".repeat(pad) + line;
+    }
+    return line;
+  }
+
+  private renderLine(l: LogLine, cols: number): string {
+    if (l.kind === "sep")
+      return center(dim("─".repeat(Math.min(24, Math.max(8, cols - 8)))), cols);
+    if (l.kind === "text") return l.align === "center" ? center(l.text, cols) : l.text;
+    return this.formatEvent(l.e, cols);
+  }
+
+  /** Shown in the body before any commentary has arrived. */
+  private waitingCard(bodyRows: number, cols: number): string[] {
+    const kickoff = new Intl.DateTimeFormat(
+      this.opts.lang === "ko" ? "ko-KR" : "en-US",
+      { month: "short", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" },
+    ).format(new Date(this.match.kickoff));
+    const card = [
+      this.match.stage ? center(dim(this.match.stage), cols) : "",
+      center(
+        `${this.match.home.flag} ${bold(this.match.home.name)}  ${dim("vs")}  ${bold(this.match.away.name)} ${this.match.away.flag}`,
+        cols,
+      ),
+      center(dim(`⏱ ${kickoff}`), cols),
+      "",
+      center(dim(this.l.loading), cols),
+    ];
+    const pad = Math.max(0, Math.floor((bodyRows - card.length) / 2));
+    return [...Array<string>(pad).fill(""), ...card].slice(0, bodyRows);
   }
 
   private winprob(): WinProb | null {
@@ -290,22 +352,24 @@ export class MatchScreen {
 
     const sep = dim("─".repeat(Math.max(4, cols - 2)));
     const bodyRows = Math.max(3, rows - 6);
-    const body = this.lines.slice(-bodyRows).map((l) => truncate(l, cols - 1));
+    const body =
+      this.lines.length === 0
+        ? this.waitingCard(bodyRows, cols)
+        : this.lines
+            .slice(-bodyRows)
+            .map((l) => truncate(this.renderLine(l, cols), cols - 1));
 
     const footer = this.footerLine();
 
-    const frame = [
+    paintFrame(out, [
       truncate(header1, cols),
       truncate(header2, cols),
       sep,
       ...body,
-      ...Array(Math.max(0, bodyRows - body.length)).fill(""),
+      ...Array<string>(Math.max(0, bodyRows - body.length)).fill(""),
       sep,
       truncate(footer, cols),
-    ].join("\n");
-
-    clearScreen(out);
-    out.write(frame);
+    ]);
   }
 
   private footerLine(): string {

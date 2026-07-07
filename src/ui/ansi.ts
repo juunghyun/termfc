@@ -70,8 +70,8 @@ export interface Term {
 export function term(out: NodeJS.WriteStream = process.stdout): Term {
   return {
     out,
-    cols: () => out.columns ?? 80,
-    rows: () => out.rows ?? 24,
+    cols: () => out.columns || 80,
+    rows: () => out.rows || 24,
   };
 }
 
@@ -83,6 +83,18 @@ export function leaveAltScreen(out: NodeJS.WriteStream): void {
   if (out.isTTY) out.write("\x1b[?25h\x1b[?1049l");
 }
 
-export function clearScreen(out: NodeJS.WriteStream): void {
-  out.write(out.isTTY ? "\x1b[2J\x1b[H" : "\n");
+/**
+ * Flicker-free full-frame paint: instead of erasing the whole screen (which
+ * flashes blank between frames), move the cursor home and overwrite each line,
+ * erasing to end-of-line per line and clearing anything below the frame.
+ * Wrapped in synchronized-output (DECSET 2026) so capable terminals swap the
+ * frame atomically; others ignore the sequence harmlessly.
+ */
+export function paintFrame(out: NodeJS.WriteStream, lines: string[]): void {
+  if (!out.isTTY) {
+    out.write(`${lines.join("\n")}\n`);
+    return;
+  }
+  const body = lines.map((l) => `${l}\x1b[K`).join("\r\n");
+  out.write(`\x1b[?2026h\x1b[H${body}\r\n\x1b[0J\x1b[?2026l`);
 }
