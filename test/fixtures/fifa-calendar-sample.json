@@ -1,0 +1,940 @@
+{
+ "Results": [
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289289",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021536",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Quarter-final"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-09T20:00:00Z",
+   "LocalDate": "2026-07-09T16:00:00Z",
+   "Home": {
+    "Score": null,
+    "Side": null,
+    "IdTeam": "43946",
+    "PictureUrl": "https://api.fifa.com/api/v3/picture/flags-{format}-{size}/FRA",
+    "IdCountry": "FRA",
+    "Tactics": null,
+    "TeamType": 1,
+    "AgeType": 7,
+    "TeamName": [
+     {
+      "Locale": "en-GB",
+      "Description": "France"
+     }
+    ],
+    "Abbreviation": "FRA",
+    "ShortClubName": "France",
+    "FootballType": 0,
+    "Gender": 1,
+    "IdAssociation": "FRA"
+   },
+   "Away": {
+    "Score": null,
+    "Side": null,
+    "IdTeam": "43872",
+    "PictureUrl": "https://api.fifa.com/api/v3/picture/flags-{format}-{size}/MAR",
+    "IdCountry": "MAR",
+    "Tactics": null,
+    "TeamType": 1,
+    "AgeType": 7,
+    "TeamName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Morocco"
+     }
+    ],
+    "Abbreviation": "MAR",
+    "ShortClubName": "Morocco",
+    "FootballType": 0,
+    "Gender": 1,
+    "IdAssociation": "MAR"
+   },
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400248623",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "Boston Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400221953",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Boston"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5007073"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "W89",
+   "PlaceHolderB": "W90",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 97,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151703"
+   },
+   "IsUpdateable": null
+  },
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289289",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021538",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Quarter-final"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-10T19:00:00Z",
+   "LocalDate": "2026-07-10T12:00:00Z",
+   "Home": {
+    "Score": null,
+    "Side": null,
+    "IdTeam": "43969",
+    "PictureUrl": "https://api.fifa.com/api/v3/picture/flags-{format}-{size}/ESP",
+    "IdCountry": "ESP",
+    "Tactics": null,
+    "TeamType": 1,
+    "AgeType": 7,
+    "TeamName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Spain"
+     }
+    ],
+    "Abbreviation": "ESP",
+    "ShortClubName": "Spain",
+    "FootballType": 0,
+    "Gender": 1,
+    "IdAssociation": "ESP"
+   },
+   "Away": {
+    "Score": null,
+    "Side": null,
+    "IdTeam": "43935",
+    "PictureUrl": "https://api.fifa.com/api/v3/picture/flags-{format}-{size}/BEL",
+    "IdCountry": "BEL",
+    "Tactics": null,
+    "TeamType": 1,
+    "AgeType": 7,
+    "TeamName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Belgium"
+     }
+    ],
+    "Abbreviation": "BEL",
+    "ShortClubName": "Belgium",
+    "FootballType": 0,
+    "Gender": 1,
+    "IdAssociation": "BEL"
+   },
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400017978",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "Los Angeles Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400021920",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Los Angeles"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5048026"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "W93",
+   "PlaceHolderB": "W94",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 98,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151704"
+   },
+   "IsUpdateable": null
+  },
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289289",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021539",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Quarter-final"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-11T21:00:00Z",
+   "LocalDate": "2026-07-11T17:00:00Z",
+   "Home": {
+    "Score": null,
+    "Side": null,
+    "IdTeam": "43961",
+    "PictureUrl": "https://api.fifa.com/api/v3/picture/flags-{format}-{size}/NOR",
+    "IdCountry": "NOR",
+    "Tactics": null,
+    "TeamType": 1,
+    "AgeType": 7,
+    "TeamName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Norway"
+     }
+    ],
+    "Abbreviation": "NOR",
+    "ShortClubName": "Norway",
+    "FootballType": 0,
+    "Gender": 1,
+    "IdAssociation": "NOR"
+   },
+   "Away": {
+    "Score": null,
+    "Side": null,
+    "IdTeam": "43942",
+    "PictureUrl": "https://api.fifa.com/api/v3/picture/flags-{format}-{size}/ENG",
+    "IdCountry": "ENG",
+    "Tactics": null,
+    "TeamType": 1,
+    "AgeType": 7,
+    "TeamName": [
+     {
+      "Locale": "en-GB",
+      "Description": "England"
+     }
+    ],
+    "Abbreviation": "ENG",
+    "ShortClubName": "England",
+    "FootballType": 0,
+    "Gender": 1,
+    "IdAssociation": "ENG"
+   },
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400257525",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "Miami Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400254039",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Miami"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5017990"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "W91",
+   "PlaceHolderB": "W92",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 99,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151706"
+   },
+   "IsUpdateable": null
+  },
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289289",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021537",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Quarter-final"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-12T01:00:00Z",
+   "LocalDate": "2026-07-11T20:00:00Z",
+   "Home": null,
+   "Away": null,
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400254717",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "Kansas City Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400019415",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Kansas City"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5003287"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "W95",
+   "PlaceHolderB": "W96",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 100,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151705"
+   },
+   "IsUpdateable": null
+  },
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289290",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021541",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Semi-final"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-14T19:00:00Z",
+   "LocalDate": "2026-07-14T14:00:00Z",
+   "Home": null,
+   "Away": null,
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400257526",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "Dallas Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400221951",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Dallas"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5020989"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "W97",
+   "PlaceHolderB": "W98",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 101,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151707"
+   },
+   "IsUpdateable": null
+  },
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289290",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021540",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Semi-final"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-15T19:00:00Z",
+   "LocalDate": "2026-07-15T15:00:00Z",
+   "Home": null,
+   "Away": null,
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400098290",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "Atlanta Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400256355",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Atlanta"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5044204"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "W99",
+   "PlaceHolderB": "W100",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 102,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151708"
+   },
+   "IsUpdateable": null
+  },
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289291",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021542",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Play-off for third place"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-18T21:00:00Z",
+   "LocalDate": "2026-07-18T17:00:00Z",
+   "Home": null,
+   "Away": null,
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400257525",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "Miami Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400254039",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "Miami"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5017990"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "RU101",
+   "PlaceHolderB": "RU102",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 103,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151709"
+   },
+   "IsUpdateable": null
+  },
+  {
+   "IdCompetition": "17",
+   "IdSeason": "285023",
+   "IdStage": "289292",
+   "IdGroup": null,
+   "Weather": null,
+   "Attendance": null,
+   "IdMatch": "400021543",
+   "MatchDay": null,
+   "StageName": [
+    {
+     "Locale": "en-GB",
+     "Description": "Final"
+    }
+   ],
+   "GroupName": [],
+   "CompetitionName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup™"
+    }
+   ],
+   "SeasonName": [
+    {
+     "Locale": "en-GB",
+     "Description": "FIFA World Cup 2026™"
+    }
+   ],
+   "SeasonShortName": [],
+   "Date": "2026-07-19T19:00:00Z",
+   "LocalDate": "2026-07-19T15:00:00Z",
+   "Home": null,
+   "Away": null,
+   "HomeTeamScore": null,
+   "AwayTeamScore": null,
+   "AggregateHomeTeamScore": null,
+   "AggregateAwayTeamScore": null,
+   "HomeTeamPenaltyScore": null,
+   "AwayTeamPenaltyScore": null,
+   "LastPeriodUpdate": null,
+   "Leg": null,
+   "IsHomeMatch": null,
+   "Stadium": {
+    "IdStadium": "400257536",
+    "Name": [
+     {
+      "Locale": "en-GB",
+      "Description": "New York/New Jersey Stadium"
+     }
+    ],
+    "Capacity": null,
+    "WebAddress": null,
+    "Built": null,
+    "Roof": false,
+    "Turf": null,
+    "IdCity": "400021919",
+    "CityName": [
+     {
+      "Locale": "en-GB",
+      "Description": "New Jersey"
+     }
+    ],
+    "IdCountry": "USA",
+    "PostalCode": null,
+    "Street": null,
+    "Email": null,
+    "Fax": null,
+    "Phone": null,
+    "AffiliationCountry": null,
+    "AffiliationRegion": null,
+    "Latitude": null,
+    "Longitude": null,
+    "Length": null,
+    "Width": null,
+    "Properties": {
+     "IdIFES": "5003000"
+    },
+    "IsUpdateable": null
+   },
+   "IsTicketSalesAllowed": null,
+   "MatchTime": null,
+   "SecondHalfTime": null,
+   "FirstHalfTime": null,
+   "FirstHalfExtraTime": null,
+   "SecondHalfExtraTime": null,
+   "Winner": null,
+   "MatchReportUrl": null,
+   "PlaceHolderA": "W101",
+   "PlaceHolderB": "W102",
+   "BallPossession": null,
+   "Officials": [],
+   "MatchStatus": 1,
+   "ResultType": 0,
+   "MatchNumber": 104,
+   "TimeDefined": true,
+   "OfficialityStatus": 0,
+   "MatchLegInfo": null,
+   "Properties": {
+    "IdIFES": "151710"
+   },
+   "IsUpdateable": null
+  }
+ ]
+}
