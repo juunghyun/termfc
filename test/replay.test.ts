@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -69,6 +69,18 @@ describe("recorder + player round-trip", () => {
 
   it("rejects files that are not termfc replays", () => {
     expect(() => parseReplay('{"foo":1}\n')).toThrow(/not a termfc replay/);
+  });
+
+  it("creates no file until the first event arrives (waiting-mode quit)", () => {
+    const dir = mkdtempSync(join(tmpdir(), "termfc-test-"));
+    const rec = new ReplayRecorder(match, dir);
+    expect(existsSync(rec.file)).toBe(false); // quit while waiting -> no JSONL
+    rec.append([]);
+    expect(existsSync(rec.file)).toBe(false); // empty batches don't count
+    rec.append([ev("1")]);
+    expect(existsSync(rec.file)).toBe(true);
+    const lines = readFileSync(rec.file, "utf8").trim().split("\n");
+    expect(lines).toHaveLength(2); // header + one event
   });
 
   it("derives the shoot-out phase from FIFA period 11", async () => {

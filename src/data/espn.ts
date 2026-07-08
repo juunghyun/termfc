@@ -5,6 +5,7 @@ import {
   type Lang,
   type Match,
   type MatchState,
+  type StageKind,
   type TimelineEvent,
 } from "../core/model.js";
 import { mapEspnPhase } from "../core/state.js";
@@ -19,6 +20,28 @@ export const ESPN_WC_SLUG = "fifa.world";
 
 function fmtDate(d: Date): string {
   return d.toISOString().slice(0, 10).replaceAll("-", "");
+}
+
+/**
+ * Best-effort round/group from ESPN's free-text stage hints (season slug,
+ * altGameNote). Undefined on no match — bracket quality degrades gracefully.
+ * Order matters: "semifinal"/"quarterfinal" contain "final".
+ */
+export function parseEspnStage(
+  ...texts: Array<string | undefined>
+): { stageKind?: StageKind; group?: string } {
+  const s = texts.filter(Boolean).join(" ").toLowerCase();
+  if (!s) return {};
+  const grp = /group\s+([a-l])\b/.exec(s);
+  if (grp) return { stageKind: "GROUP", group: grp[1]!.toUpperCase() };
+  if (/round[\s-]of[\s-]32/.test(s)) return { stageKind: "R32" };
+  if (/round[\s-]of[\s-]16/.test(s)) return { stageKind: "R16" };
+  if (s.includes("quarter")) return { stageKind: "QF" };
+  if (s.includes("semi")) return { stageKind: "SF" };
+  if (s.includes("third")) return { stageKind: "THIRD" };
+  if (s.includes("final")) return { stageKind: "FINAL" };
+  if (s.includes("group")) return { stageKind: "GROUP" };
+  return {};
 }
 
 export class EspnProvider implements MatchDataProvider {
@@ -36,7 +59,21 @@ export class EspnProvider implements MatchDataProvider {
   }
 
   async fetchSchedule(_lang: Lang): Promise<Match[]> {
-    const data = await getJson(this.scoreboardUrl());
+    return this.fetchScoreboard(this.scoreboardUrl());
+  }
+
+  /**
+   * One-day scoreboard around a specific match — used to lazily link an
+   * ESPN ref at watch time, when both team codes are finally known.
+   */
+  async fetchDaySchedule(day: Date, _lang: Lang): Promise<Match[]> {
+    return this.fetchScoreboard(
+      `${this.base}/${this.league}/scoreboard?dates=${fmtDate(day)}`,
+    );
+  }
+
+  private async fetchScoreboard(url: string): Promise<Match[]> {
+    const data = await getJson(url);
     if (!Array.isArray(data?.events))
       throw new SchemaError("espn", "scoreboard events is not an array");
     return data.events
@@ -65,6 +102,10 @@ export class EspnProvider implements MatchDataProvider {
         flag: flagEmoji(code),
       };
     };
+    const { stageKind, group } = parseEspnStage(
+      e.season?.slug,
+      comp.altGameNote,
+    );
     return {
       id: String(e.id),
       stage: e.season?.slug ?? comp.altGameNote ?? "",
@@ -77,8 +118,26 @@ export class EspnProvider implements MatchDataProvider {
       },
       phase,
       matchTime: status.displayClock,
+      ...(stageKind ? { stageKind } : {}),
+      ...(group ? { group } : {}),
       sourceRefs: { espn: { eventId: String(e.id) } },
     };
+  }
+
+  async fetchLiveMatchIds(_lang: Lang): Promise<Set<string>> {
+    // Single-day scoreboard — the cheap probe equivalent for ESPN.
+    const today = fmtDate(new Date());
+    const data = await getJson(
+      `${this.base}/${this.league}/scoreboard?dates=${today}`,
+    );
+    if (!Array.isArray(data?.events))
+      throw new SchemaError("espn", "scoreboard events is not an array");
+    const ids = new Set<string>();
+    for (const e of data.events) {
+      const status = e.competitions?.[0]?.status ?? e.status ?? {};
+      if (status.type?.state === "in") ids.add(String(e.id));
+    }
+    return ids;
   }
 
   async fetchMatchState(match: Match, _lang: Lang): Promise<MatchState | null> {

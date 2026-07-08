@@ -11,13 +11,19 @@ import { SchemaError, type MatchDataProvider } from "../src/data/provider.js";
 function provider(
   name: "fifa" | "espn",
   impl: () => Promise<Match[]>,
-  overrides: Partial<Pick<MatchDataProvider, "fetchMatchState" | "fetchTimeline">> = {},
+  overrides: Partial<
+    Pick<
+      MatchDataProvider,
+      "fetchMatchState" | "fetchTimeline" | "fetchLiveMatchIds"
+    >
+  > = {},
 ): MatchDataProvider {
   return {
     name,
     fetchSchedule: impl,
     fetchMatchState: async () => null as MatchState | null,
     fetchTimeline: async () => [] as TimelineEvent[],
+    fetchLiveMatchIds: async () => new Set<string>(),
     ...overrides,
   };
 }
@@ -97,6 +103,20 @@ describe("FailoverProvider", () => {
     await expect(f.fetchMatchState(m({}), "ko" as Lang)).rejects.toThrow();
     await expect(f.fetchMatchState(m({}), "ko" as Lang)).rejects.toThrow();
     expect(await f.fetchMatchState(m({}), "ko" as Lang)).toEqual(state);
+    expect(f.activeSource).toBe("espn");
+  });
+
+  it("delegates the live-ids probe through the same failover path", async () => {
+    const fifa = provider("fifa", async () => [], {
+      fetchLiveMatchIds: async () => {
+        throw new SchemaError("fifa", "live/now shape drifted");
+      },
+    });
+    const espn = provider("espn", async () => [], {
+      fetchLiveMatchIds: async () => new Set(["42"]),
+    });
+    const f = new FailoverProvider(fifa, espn);
+    expect(await f.fetchLiveMatchIds("ko" as Lang)).toEqual(new Set(["42"]));
     expect(f.activeSource).toBe("espn");
   });
 

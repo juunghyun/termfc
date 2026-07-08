@@ -5,6 +5,7 @@ import {
   type Lang,
   type Match,
   type MatchState,
+  type StageKind,
   type Team,
   type TimelineEvent,
 } from "../core/model.js";
@@ -15,6 +16,15 @@ import { flagEmoji } from "./teams.js";
 
 const BASE = "https://api.fifa.com/api/v3";
 export const WORLD_CUP_2026 = { idCompetition: "17", idSeason: "285023" };
+
+/**
+ * Whole-tournament calendar window (opener 2026-06-11 … final 2026-07-19,
+ * two-day buffer each side). One request returns all 104 matches — verified
+ * against the live endpoint (count=200 cap not hit). Must stay on clean
+ * 30-minute boundaries, see isoFloorHour.
+ */
+const TOURNAMENT_FROM = "2026-06-09T00:00:00Z";
+const TOURNAMENT_TO = "2026-07-21T00:00:00Z";
 
 function apiLang(lang: Lang): string {
   return lang === "ko" ? "ko" : "en";
@@ -31,6 +41,42 @@ function isoFloorHour(ms: number): string {
   return d.toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
+/** 2026 season stage ids (verified against live calendar data, 2026-07). */
+const STAGE_KIND_BY_ID: Record<string, StageKind> = {
+  "289273": "GROUP",
+  "289287": "R32",
+  "289288": "R16",
+  "289289": "QF",
+  "289290": "SF",
+  "289291": "THIRD",
+  "289292": "FINAL",
+};
+
+/** Official match-number ranges double as a language-free fallback. */
+function stageKindOf(
+  idStage: unknown,
+  matchNumber: number | undefined,
+): StageKind | undefined {
+  const byId = STAGE_KIND_BY_ID[String(idStage)];
+  if (byId) return byId;
+  if (matchNumber === undefined) return undefined;
+  if (matchNumber >= 1 && matchNumber <= 72) return "GROUP";
+  if (matchNumber <= 88) return "R32";
+  if (matchNumber <= 96) return "R16";
+  if (matchNumber <= 100) return "QF";
+  if (matchNumber <= 102) return "SF";
+  if (matchNumber === 103) return "THIRD";
+  if (matchNumber === 104) return "FINAL";
+  return undefined;
+}
+
+/** "Group A" (en) / "A조" (ko) → "A". */
+function groupLetter(desc: string | undefined): string | undefined {
+  if (!desc) return undefined;
+  const m = /Group\s+([A-L])\b/i.exec(desc) ?? /([A-L])\s*조/.exec(desc);
+  return m ? m[1]!.toUpperCase() : undefined;
+}
+
 function toTeam(raw: any, placeholder: string): Team {
   if (!raw) return { code: "TBD", name: placeholder || "TBD", flag: "🏳️" };
   const code: string = raw.Abbreviation ?? "TBD";
@@ -44,6 +90,10 @@ function normalizeMatch(m: any): Match {
   const phase = mapFifaPhase(m.MatchStatus, m.Period, minute);
   const home = toTeam(m.Home, m.PlaceHolderA ?? "TBD");
   const away = toTeam(m.Away, m.PlaceHolderB ?? "TBD");
+  const matchNumber =
+    typeof m.MatchNumber === "number" ? m.MatchNumber : undefined;
+  const stageKind = stageKindOf(m.IdStage, matchNumber);
+  const group = groupLetter(m.GroupName?.[0]?.Description);
   const match: Match = {
     id: String(m.IdMatch),
     stage: m.StageName?.[0]?.Description ?? "",
@@ -62,6 +112,9 @@ function normalizeMatch(m: any): Match {
     },
     phase,
     matchTime: m.MatchTime || undefined,
+    ...(matchNumber !== undefined ? { matchNumber } : {}),
+    ...(stageKind ? { stageKind } : {}),
+    ...(group ? { group } : {}),
     sourceRefs: {
       fifa: {
         idCompetition: String(m.IdCompetition),
@@ -103,17 +156,23 @@ export class FifaProvider implements MatchDataProvider {
   ) {}
 
   async fetchSchedule(lang: Lang): Promise<Match[]> {
-    const now = Date.now();
-    const from = isoFloorHour(now - 36 * 3600_000);
-    const to = isoFloorHour(now + 8 * 86400_000 + 3600_000);
     const data = await getJson(
-      `${this.base}/calendar/matches?from=${from}&to=${to}&idCompetition=${this.season.idCompetition}&idSeason=${this.season.idSeason}&count=200&language=${apiLang(lang)}`,
+      `${this.base}/calendar/matches?from=${TOURNAMENT_FROM}&to=${TOURNAMENT_TO}&idCompetition=${this.season.idCompetition}&idSeason=${this.season.idSeason}&count=200&language=${apiLang(lang)}`,
     );
     if (!Array.isArray(data?.Results))
       throw new SchemaError("fifa", "calendar Results is not an array");
     return data.Results.map(normalizeMatch).sort((a: Match, b: Match) =>
       a.kickoff.localeCompare(b.kickoff),
     );
+  }
+
+  async fetchLiveMatchIds(lang: Lang): Promise<Set<string>> {
+    const live = await getJson(
+      `${this.base}/live/football/now?language=${apiLang(lang)}`,
+    );
+    if (!Array.isArray(live?.Results))
+      throw new SchemaError("fifa", "live/now Results is not an array");
+    return new Set(live.Results.map((r: any) => String(r.IdMatch)));
   }
 
   async fetchMatchState(match: Match, lang: Lang): Promise<MatchState | null> {

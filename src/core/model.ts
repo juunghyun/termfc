@@ -1,6 +1,16 @@
 export type Lang = "ko" | "en";
 export type SourceName = "fifa" | "espn";
 
+/** Tournament round, group stage through final (2026: 48 teams, R32 exists). */
+export type StageKind =
+  | "GROUP"
+  | "R32"
+  | "R16"
+  | "QF"
+  | "SF"
+  | "THIRD"
+  | "FINAL";
+
 export type MatchPhase =
   | "SCHEDULED"
   | "FIRST_HALF"
@@ -35,6 +45,7 @@ export type EventType =
   | "COIN_TOSS"
   | "BREAK"
   | "RESUMED"
+  | "ADDED_TIME"
   | "UNKNOWN";
 
 export type Salience = "high" | "low";
@@ -96,6 +107,12 @@ export interface Match {
   phase: MatchPhase;
   /** Raw source match time, e.g. "67'" or "90'+4'". */
   matchTime?: string;
+  /** Group letter A–L (group-stage matches only, best-effort for ESPN). */
+  group?: string;
+  /** Normalized round; undefined when the source doesn't say (ESPN). */
+  stageKind?: StageKind;
+  /** Official tournament match number 1–104 (FIFA only). */
+  matchNumber?: number;
   sourceRefs: SourceRefs;
 }
 

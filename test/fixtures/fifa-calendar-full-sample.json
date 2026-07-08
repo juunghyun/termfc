@@ -1,0 +1,727 @@
+{
+  "Results": [
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289275",
+      "IdMatch": "400021443",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group A"
+        }
+      ],
+      "Date": "2026-06-11T19:00:00Z",
+      "Home": {
+        "IdTeam": "43911",
+        "Score": 2,
+        "Abbreviation": "MEX",
+        "ShortClubName": "Mexico",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Mexico"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43883",
+        "Score": 0,
+        "Abbreviation": "RSA",
+        "ShortClubName": "South Africa",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "South Africa"
+          }
+        ]
+      },
+      "HomeTeamScore": 2,
+      "AwayTeamScore": 0,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "98'",
+      "PlaceHolderA": "A1",
+      "PlaceHolderB": "A2",
+      "MatchStatus": 0,
+      "MatchNumber": 1,
+      "Winner": "43911"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289275",
+      "IdMatch": "400021441",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group A"
+        }
+      ],
+      "Date": "2026-06-12T02:00:00Z",
+      "Home": {
+        "IdTeam": "43822",
+        "Score": 2,
+        "Abbreviation": "KOR",
+        "ShortClubName": "Korea Republic",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Korea Republic"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43995",
+        "Score": 1,
+        "Abbreviation": "CZE",
+        "ShortClubName": "Czechia",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Czechia"
+          }
+        ]
+      },
+      "HomeTeamScore": 2,
+      "AwayTeamScore": 1,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "97'",
+      "PlaceHolderA": "A3",
+      "PlaceHolderB": "A4",
+      "MatchStatus": 0,
+      "MatchNumber": 2,
+      "Winner": "43822"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289275",
+      "IdMatch": "400021440",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group A"
+        }
+      ],
+      "Date": "2026-06-18T16:00:00Z",
+      "Home": {
+        "IdTeam": "43995",
+        "Score": 1,
+        "Abbreviation": "CZE",
+        "ShortClubName": "Czechia",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Czechia"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43883",
+        "Score": 1,
+        "Abbreviation": "RSA",
+        "ShortClubName": "South Africa",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "South Africa"
+          }
+        ]
+      },
+      "HomeTeamScore": 1,
+      "AwayTeamScore": 1,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "98'",
+      "PlaceHolderA": "A4",
+      "PlaceHolderB": "A2",
+      "MatchStatus": 0,
+      "MatchNumber": 25,
+      "Winner": null
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289275",
+      "IdMatch": "400021442",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group A"
+        }
+      ],
+      "Date": "2026-06-19T01:00:00Z",
+      "Home": {
+        "IdTeam": "43911",
+        "Score": 1,
+        "Abbreviation": "MEX",
+        "ShortClubName": "Mexico",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Mexico"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43822",
+        "Score": 0,
+        "Abbreviation": "KOR",
+        "ShortClubName": "Korea Republic",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Korea Republic"
+          }
+        ]
+      },
+      "HomeTeamScore": 1,
+      "AwayTeamScore": 0,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "97'",
+      "PlaceHolderA": "A1",
+      "PlaceHolderB": "A3",
+      "MatchStatus": 0,
+      "MatchNumber": 28,
+      "Winner": "43911"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289275",
+      "IdMatch": "400021445",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group A"
+        }
+      ],
+      "Date": "2026-06-25T01:00:00Z",
+      "Home": {
+        "IdTeam": "43883",
+        "Score": 1,
+        "Abbreviation": "RSA",
+        "ShortClubName": "South Africa",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "South Africa"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43822",
+        "Score": 0,
+        "Abbreviation": "KOR",
+        "ShortClubName": "Korea Republic",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Korea Republic"
+          }
+        ]
+      },
+      "HomeTeamScore": 1,
+      "AwayTeamScore": 0,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "97'",
+      "PlaceHolderA": "A2",
+      "PlaceHolderB": "A3",
+      "MatchStatus": 0,
+      "MatchNumber": 54,
+      "Winner": "43883"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289275",
+      "IdMatch": "400021444",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group A"
+        }
+      ],
+      "Date": "2026-06-25T01:00:00Z",
+      "Home": {
+        "IdTeam": "43995",
+        "Score": 0,
+        "Abbreviation": "CZE",
+        "ShortClubName": "Czechia",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Czechia"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43911",
+        "Score": 3,
+        "Abbreviation": "MEX",
+        "ShortClubName": "Mexico",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Mexico"
+          }
+        ]
+      },
+      "HomeTeamScore": 0,
+      "AwayTeamScore": 3,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "97'",
+      "PlaceHolderA": "A4",
+      "PlaceHolderB": "A1",
+      "MatchStatus": 0,
+      "MatchNumber": 53,
+      "Winner": "43911"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289276",
+      "IdMatch": "400021449",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group B"
+        }
+      ],
+      "Date": "2026-06-12T19:00:00Z",
+      "Home": {
+        "IdTeam": "43899",
+        "Score": 1,
+        "Abbreviation": "CAN",
+        "ShortClubName": "Canada",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Canada"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "44037",
+        "Score": 1,
+        "Abbreviation": "BIH",
+        "ShortClubName": "Bosnia and Herzegovina",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Bosnia and Herzegovina"
+          }
+        ]
+      },
+      "HomeTeamScore": 1,
+      "AwayTeamScore": 1,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "97'",
+      "PlaceHolderA": "B1",
+      "PlaceHolderB": "B2",
+      "MatchStatus": 0,
+      "MatchNumber": 3,
+      "Winner": null
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289273",
+      "IdGroup": "289276",
+      "IdMatch": "400021447",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "First Stage"
+        }
+      ],
+      "GroupName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Group B"
+        }
+      ],
+      "Date": "2026-06-13T19:00:00Z",
+      "Home": {
+        "IdTeam": "43834",
+        "Score": 1,
+        "Abbreviation": "QAT",
+        "ShortClubName": "Qatar",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Qatar"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43971",
+        "Score": 1,
+        "Abbreviation": "SUI",
+        "ShortClubName": "Switzerland",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Switzerland"
+          }
+        ]
+      },
+      "HomeTeamScore": 1,
+      "AwayTeamScore": 1,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "98'",
+      "PlaceHolderA": "B3",
+      "PlaceHolderB": "B4",
+      "MatchStatus": 0,
+      "MatchNumber": 8,
+      "Winner": null
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289287",
+      "IdGroup": null,
+      "IdMatch": "400021518",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Round of 32"
+        }
+      ],
+      "GroupName": [
+        null
+      ],
+      "Date": "2026-06-28T19:00:00Z",
+      "Home": {
+        "IdTeam": "43883",
+        "Score": 0,
+        "Abbreviation": "RSA",
+        "ShortClubName": "South Africa",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "South Africa"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43899",
+        "Score": 1,
+        "Abbreviation": "CAN",
+        "ShortClubName": "Canada",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Canada"
+          }
+        ]
+      },
+      "HomeTeamScore": 0,
+      "AwayTeamScore": 1,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "97'",
+      "PlaceHolderA": "2A",
+      "PlaceHolderB": "2B",
+      "MatchStatus": 0,
+      "MatchNumber": 73,
+      "Winner": "43899"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289287",
+      "IdGroup": null,
+      "IdMatch": "400021513",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Round of 32"
+        }
+      ],
+      "GroupName": [
+        null
+      ],
+      "Date": "2026-06-29T20:30:00Z",
+      "Home": {
+        "IdTeam": "43948",
+        "Score": 1,
+        "Abbreviation": "GER",
+        "ShortClubName": "Germany",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Germany"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43928",
+        "Score": 1,
+        "Abbreviation": "PAR",
+        "ShortClubName": "Paraguay",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Paraguay"
+          }
+        ]
+      },
+      "HomeTeamScore": 1,
+      "AwayTeamScore": 1,
+      "HomeTeamPenaltyScore": 3,
+      "AwayTeamPenaltyScore": 4,
+      "MatchTime": "132'",
+      "PlaceHolderA": "1E",
+      "PlaceHolderB": "3ABCDF",
+      "MatchStatus": 0,
+      "MatchNumber": 74,
+      "Winner": "43928"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289288",
+      "IdGroup": null,
+      "IdMatch": "400021530",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Round of 16"
+        }
+      ],
+      "GroupName": [
+        null
+      ],
+      "Date": "2026-07-04T17:00:00Z",
+      "Home": {
+        "IdTeam": "43899",
+        "Score": 0,
+        "Abbreviation": "CAN",
+        "ShortClubName": "Canada",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Canada"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43872",
+        "Score": 3,
+        "Abbreviation": "MAR",
+        "ShortClubName": "Morocco",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Morocco"
+          }
+        ]
+      },
+      "HomeTeamScore": 0,
+      "AwayTeamScore": 3,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": "100'",
+      "PlaceHolderA": "W73",
+      "PlaceHolderB": "W75",
+      "MatchStatus": 0,
+      "MatchNumber": 90,
+      "Winner": "43872"
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289289",
+      "IdGroup": null,
+      "IdMatch": "400021536",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Quarter-final"
+        }
+      ],
+      "GroupName": [
+        null
+      ],
+      "Date": "2026-07-09T20:00:00Z",
+      "Home": {
+        "IdTeam": "43946",
+        "Score": null,
+        "Abbreviation": "FRA",
+        "ShortClubName": "France",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "France"
+          }
+        ]
+      },
+      "Away": {
+        "IdTeam": "43872",
+        "Score": null,
+        "Abbreviation": "MAR",
+        "ShortClubName": "Morocco",
+        "TeamName": [
+          {
+            "Locale": "en-GB",
+            "Description": "Morocco"
+          }
+        ]
+      },
+      "HomeTeamScore": null,
+      "AwayTeamScore": null,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": null,
+      "PlaceHolderA": "W89",
+      "PlaceHolderB": "W90",
+      "MatchStatus": 1,
+      "MatchNumber": 97,
+      "Winner": null
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289290",
+      "IdGroup": null,
+      "IdMatch": "400021541",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Semi-final"
+        }
+      ],
+      "GroupName": [
+        null
+      ],
+      "Date": "2026-07-14T19:00:00Z",
+      "Home": null,
+      "Away": null,
+      "HomeTeamScore": null,
+      "AwayTeamScore": null,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": null,
+      "PlaceHolderA": "W97",
+      "PlaceHolderB": "W98",
+      "MatchStatus": 1,
+      "MatchNumber": 101,
+      "Winner": null
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289291",
+      "IdGroup": null,
+      "IdMatch": "400021542",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Play-off for third place"
+        }
+      ],
+      "GroupName": [
+        null
+      ],
+      "Date": "2026-07-18T21:00:00Z",
+      "Home": null,
+      "Away": null,
+      "HomeTeamScore": null,
+      "AwayTeamScore": null,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": null,
+      "PlaceHolderA": "RU101",
+      "PlaceHolderB": "RU102",
+      "MatchStatus": 1,
+      "MatchNumber": 103,
+      "Winner": null
+    },
+    {
+      "IdCompetition": "17",
+      "IdSeason": "285023",
+      "IdStage": "289292",
+      "IdGroup": null,
+      "IdMatch": "400021543",
+      "StageName": [
+        {
+          "Locale": "en-GB",
+          "Description": "Final"
+        }
+      ],
+      "GroupName": [
+        null
+      ],
+      "Date": "2026-07-19T19:00:00Z",
+      "Home": null,
+      "Away": null,
+      "HomeTeamScore": null,
+      "AwayTeamScore": null,
+      "HomeTeamPenaltyScore": null,
+      "AwayTeamPenaltyScore": null,
+      "MatchTime": null,
+      "PlaceHolderA": "W101",
+      "PlaceHolderB": "W102",
+      "MatchStatus": 1,
+      "MatchNumber": 104,
+      "Winner": null
+    }
+  ]
+}

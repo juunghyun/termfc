@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Match } from "../src/core/model.js";
-import { EspnProvider } from "../src/data/espn.js";
+import { EspnProvider, parseEspnStage } from "../src/data/espn.js";
 
 const fixture = (name: string) =>
   readFileSync(join(__dirname, "fixtures", name), "utf8");
@@ -41,14 +41,14 @@ describe("EspnProvider.fetchTimeline (real summary fixture)", () => {
     const goal = events.find((e) => e.type === "GOAL")!;
     expect(goal.player).toBe("Mikel Merino");
     expect(goal.text).toContain("득점"); // our Korean template
-    expect(goal.text).not.toContain("left footed shot"); // not ESPN's prose
+    expect(goal.text).not.toContain("Synthetic sample"); // fixture text never passes through
     expect(goal.second).toBeDefined(); // ESPN gives second precision
     expect(goal.id).toMatch(/^espn:/);
 
     const en = await new EspnProvider().fetchTimeline(match, "en");
     const goalEn = en.find((e) => e.type === "GOAL")!;
     expect(goalEn.text).toMatch(/scores/i);
-    expect(goalEn.text).not.toContain("bottom left corner");
+    expect(goalEn.text).not.toContain("Synthetic sample");
   });
 });
 
@@ -79,6 +79,31 @@ describe("EspnProvider.fetchSchedule (real scoreboard fixture)", () => {
     await expect(
       new EspnProvider().fetchTimeline(match, "ko"),
     ).rejects.toThrow(/commentary/);
+  });
+});
+
+describe("parseEspnStage (best-effort round/group hints)", () => {
+  it("maps stage text to normalized rounds", () => {
+    expect(parseEspnStage("round-of-16")).toEqual({ stageKind: "R16" });
+    expect(parseEspnStage("Round of 32")).toEqual({ stageKind: "R32" });
+    expect(parseEspnStage(undefined, "Quarterfinals")).toEqual({
+      stageKind: "QF",
+    });
+    expect(parseEspnStage("Semifinal 1")).toEqual({ stageKind: "SF" });
+    expect(parseEspnStage("Third place game")).toEqual({
+      stageKind: "THIRD",
+    });
+    expect(parseEspnStage("Final")).toEqual({ stageKind: "FINAL" });
+  });
+
+  it("extracts the group letter and defaults safely", () => {
+    expect(parseEspnStage("Group A - Matchday 2")).toEqual({
+      stageKind: "GROUP",
+      group: "A",
+    });
+    expect(parseEspnStage("group-stage")).toEqual({ stageKind: "GROUP" });
+    expect(parseEspnStage("regular-season")).toEqual({});
+    expect(parseEspnStage(undefined, undefined)).toEqual({});
   });
 });
 

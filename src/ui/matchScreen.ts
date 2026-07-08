@@ -3,11 +3,19 @@ import * as readline from "node:readline";
 import { ClockInterpolator, formatClock } from "../core/clock.js";
 import { EVENT_ICON, labels, type Labels } from "../core/i18n.js";
 import {
+  BOUNDARY_PHASES,
+  boundaryPhaseOf,
+  deriveHighlights,
+  foldTimeline,
+} from "../core/digest.js";
+import {
   formatEventClock,
   isClockRunning,
   type Lang,
   type Match,
+  type MatchPhase,
   type MatchState,
+  type Score,
   type TimelineEvent,
 } from "../core/model.js";
 import { phaseLabel } from "../core/state.js";
@@ -36,6 +44,7 @@ import {
   entranceFrames,
   goalFrames,
 } from "./animations.js";
+import { fmtCountdown } from "./listScreen.js";
 
 export interface MatchFeedLike extends EventEmitter {
   start(): void;
@@ -49,6 +58,7 @@ const SYSTEM_TYPES: ReadonlySet<TimelineEvent["type"]> = new Set([
   "FULLTIME",
   "BREAK",
   "RESUMED",
+  "ADDED_TIME",
 ]);
 
 /** Log entries are stored structured and formatted at render time, so
@@ -56,7 +66,8 @@ const SYSTEM_TYPES: ReadonlySet<TimelineEvent["type"]> = new Set([
 type LogLine =
   | { kind: "event"; e: TimelineEvent }
   | { kind: "text"; text: string; align?: "left" | "center" }
-  | { kind: "sep" };
+  | { kind: "sep" }
+  | { kind: "boundary"; phase: MatchPhase; score: Score };
 
 export interface MatchScreenOptions {
   lang: Lang;
@@ -88,6 +99,10 @@ export class MatchScreen {
   private flashText = "";
   private finished = false;
   private sourceSwitchedLabel = false;
+  private keyEvents: TimelineEvent[] = [];
+  private cancelledIds = new Set<string>();
+  private boundariesMarked = new Set<MatchPhase>();
+  private lastPhase: MatchPhase | null = null;
 
   constructor(
     private readonly match: Match,
@@ -162,6 +177,12 @@ export class MatchScreen {
         injury: s.injury,
         phase: s.phase,
       });
+      // Boundary trigger 1/2: phase transition into a break (source-robust —
+      // ESPN's PERIOD_END events are unreliable, the state phase is not).
+      if (this.lastPhase !== null && s.phase !== this.lastPhase) {
+        this.markBoundary(s.phase, s.score);
+      }
+      this.lastPhase = s.phase;
     });
 
     this.feed.on("events", (events: TimelineEvent[]) => {
@@ -175,10 +196,22 @@ export class MatchScreen {
         entries.push({ kind: "event", e });
         if (isGoal) entries.push({ kind: "sep" });
       }
+      this.keyEvents.push(...events);
       if (this.controller.mode === "ANIMATION") this.pending.push(...entries);
       else {
         this.lines.push(...entries);
         this.render();
+      }
+      // Boundary trigger 2/2: explicit whistle events (only the unambiguous
+      // mappings — see boundaryPhaseOf).
+      for (const e of events) {
+        const boundary = boundaryPhaseOf(e);
+        if (boundary) {
+          this.markBoundary(
+            boundary,
+            e.scoreAfter ?? this.state?.score ?? this.match.score,
+          );
+        }
       }
     });
 
@@ -207,6 +240,7 @@ export class MatchScreen {
     });
 
     this.feed.on("cancelled", (e: TimelineEvent) => {
+      this.cancelledIds.add(e.id); // strip drops the disallowed goal
       const line = `${dim(formatEventClock(e).padStart(7))}  ${red(`📺 ${this.l.goalCancelled} (${this.l.corrected})`)} ${dim(e.text ? normalizeEventText(e.text) : "")}`;
       this.pushLine({ kind: "text", text: line });
     });
@@ -237,6 +271,14 @@ export class MatchScreen {
       this.lines.push(line);
       this.render();
     }
+  }
+
+  /** Insert a period-boundary score block, once per boundary phase. */
+  private markBoundary(phase: MatchPhase, score: Score): void {
+    if (!BOUNDARY_PHASES.has(phase) || this.boundariesMarked.has(phase))
+      return;
+    this.boundariesMarked.add(phase);
+    this.pushLine({ kind: "boundary", phase, score: { ...score } });
   }
 
   private flushPending(): void {
@@ -270,8 +312,40 @@ export class MatchScreen {
   private renderLine(l: LogLine, cols: number): string {
     if (l.kind === "sep")
       return center(dim("─".repeat(Math.min(24, Math.max(8, cols - 8)))), cols);
+    if (l.kind === "boundary") {
+      const label = phaseLabel(l.phase, this.l);
+      const pens =
+        l.score.penHome !== undefined
+          ? ` (PSO ${l.score.penHome}-${l.score.penAway})`
+          : "";
+      return center(
+        cyan(
+          `━━ ${label} · ${l.score.home} : ${l.score.away}${pens} ━━`,
+        ),
+        cols,
+      );
+    }
     if (l.kind === "text") return l.align === "center" ? center(l.text, cols) : l.text;
     return this.formatEvent(l.e, cols);
+  }
+
+  /**
+   * One-line pinned summary of goals/cards under the header. Kept to one
+   * row: when it overflows, the oldest items drop first (newest stay).
+   */
+  private highlightStrip(cols: number): string {
+    const items = deriveHighlights(this.keyEvents, this.cancelledIds);
+    if (items.length === 0) return "";
+    const parts = items.map((e) => {
+      const icon = EVENT_ICON[e.type] ?? "";
+      const who = e.player
+        ? (normalizePlayerName(e.player).split(" ").pop() ?? "")
+        : (e.teamCode ?? "");
+      return `${icon}${formatEventClock(e)} ${who}`.trim();
+    });
+    const joined = () => parts.join(" · ");
+    while (parts.length > 1 && width(joined()) > cols - 4) parts.shift();
+    return center(dim(joined()), cols);
   }
 
   /** Shown in the body before any commentary has arrived. */
@@ -280,6 +354,17 @@ export class MatchScreen {
       this.opts.lang === "ko" ? "ko-KR" : "en-US",
       { month: "short", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" },
     ).format(new Date(this.match.kickoff));
+    // Waiting mode: live countdown off the local clock (zero network),
+    // switching to a "waiting" note if kick-off is delayed past zero.
+    const phase = this.state?.phase ?? this.match.phase;
+    let status = dim(this.l.loading);
+    if (phase === "SCHEDULED" && this.opts.mode === "live") {
+      const ms = new Date(this.match.kickoff).getTime() - Date.now();
+      status =
+        ms > 0
+          ? `${dim(this.l.kickoffIn)} ${bold(green(fmtCountdown(ms)))}`
+          : dim(this.l.waitingKickoff);
+    }
     const card = [
       this.match.stage ? center(dim(this.match.stage), cols) : "",
       center(
@@ -288,7 +373,7 @@ export class MatchScreen {
       ),
       center(dim(`⏱ ${kickoff}`), cols),
       "",
-      center(dim(this.l.loading), cols),
+      center(status, cols),
     ];
     const pad = Math.max(0, Math.floor((bodyRows - card.length) / 2));
     return [...Array<string>(pad).fill(""), ...card].slice(0, bodyRows);
@@ -351,19 +436,44 @@ export class MatchScreen {
     const header2 = center(line2, cols);
 
     const sep = dim("─".repeat(Math.max(4, cols - 2)));
-    const bodyRows = Math.max(3, rows - 6);
-    const body =
-      this.lines.length === 0
-        ? this.waitingCard(bodyRows, cols)
-        : this.lines
-            .slice(-bodyRows)
-            .map((l) => truncate(this.renderLine(l, cols), cols - 1));
+    // The strip row is always reserved so the layout never jumps.
+    const strip = this.highlightStrip(cols);
+    const bodyRows = Math.max(3, rows - 7);
+    let body: string[];
+    if (this.lines.length === 0) {
+      body = this.waitingCard(bodyRows, cols);
+    } else {
+      // Fold routine events older than 15 match-minutes — a render-time
+      // view transform; `this.lines` itself stays append-only.
+      const nowMinute = Math.floor(this.clock.display().totalSeconds / 60);
+      const { visible, foldedCount } = foldTimeline(
+        this.lines,
+        nowMinute,
+        (l) => (l.kind === "event" ? l.e : null),
+      );
+      const rendered =
+        foldedCount > 0
+          ? [
+              center(
+                dim(
+                  `⋯ ${this.l.foldedNotice.replace("{n}", String(foldedCount))} ⋯`,
+                ),
+                cols,
+              ),
+              ...visible
+                .slice(-(bodyRows - 1))
+                .map((l) => this.renderLine(l, cols)),
+            ]
+          : visible.slice(-bodyRows).map((l) => this.renderLine(l, cols));
+      body = rendered.map((l) => truncate(l, cols - 1));
+    }
 
     const footer = this.footerLine();
 
     paintFrame(out, [
       truncate(header1, cols),
       truncate(header2, cols),
+      truncate(strip, cols),
       sep,
       ...body,
       ...Array<string>(Math.max(0, bodyRows - body.length)).fill(""),
