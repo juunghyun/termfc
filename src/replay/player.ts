@@ -1,5 +1,12 @@
 import { EventEmitter } from "node:events";
 import {
+  addedTimeFrom,
+  assistPlayerFrom,
+  cleanPlayerFact,
+  leadingPlayerFrom,
+  subPlayersFrom,
+} from "../core/factextract.js";
+import {
   CELEBRATION_TYPES,
   compareEvents,
   regulationCap,
@@ -14,6 +21,38 @@ export interface ParsedReplay {
   events: TimelineEvent[];
 }
 
+/**
+ * Pre-v0.4 recordings carried some facts (sub in/out, assist taker,
+ * added-time amount) only inside the stored prose sentence — promote them
+ * to structured fields on load so tone rendering can use them. The stored
+ * prose itself is never displayed (it may be source-feed text).
+ */
+function enrichFromStoredText(raw: TimelineEvent): TimelineEvent {
+  const e = { ...raw };
+  const cleaned = cleanPlayerFact(e.player); // strips the "주심이 " wart
+  if (cleaned) e.player = cleaned;
+  else if (e.player) delete e.player;
+  const text = e.text;
+  if (!text) return e;
+  if (e.type === "SUBSTITUTION" && (!e.playerIn || !e.playerOut)) {
+    const sub = subPlayersFrom(text);
+    if (sub) {
+      e.playerIn = e.playerIn ?? sub.playerIn;
+      e.playerOut = e.playerOut ?? sub.playerOut;
+    }
+  } else if (e.type === "ASSIST" && !e.player) {
+    const p = assistPlayerFrom(text);
+    if (p) e.player = p;
+  } else if (e.type === "CORNER" && !e.player) {
+    const p = leadingPlayerFrom(text);
+    if (p) e.player = p;
+  } else if (e.type === "ADDED_TIME" && e.injury === undefined) {
+    const n = addedTimeFrom(text);
+    if (n !== undefined) e.injury = n;
+  }
+  return e;
+}
+
 export function parseReplay(content: string): ParsedReplay {
   const lines = content.split("\n").filter((l) => l.trim().length > 0);
   if (lines.length === 0) throw new Error("empty replay file");
@@ -26,7 +65,7 @@ export function parseReplay(content: string): ParsedReplay {
     const e = JSON.parse(line) as TimelineEvent;
     if (seen.has(e.id)) continue; // re-watch sessions may duplicate lines
     seen.add(e.id);
-    events.push(e);
+    events.push(enrichFromStoredText(e));
   }
   events.sort(compareEvents);
   return { match: header.match, events };

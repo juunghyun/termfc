@@ -33,22 +33,19 @@ const match: Match = {
 };
 
 describe("EspnProvider.fetchTimeline (real summary fixture)", () => {
-  it("generates template sentences instead of redistributing ESPN prose", async () => {
+  it("emits structured events and never redistributes ESPN prose", async () => {
     mockFetch([[/summary/, fixture("espn-summary.json")]]);
     const events = await new EspnProvider().fetchTimeline(match, "ko");
     expect(events.length).toBeGreaterThan(50);
 
     const goal = events.find((e) => e.type === "GOAL")!;
     expect(goal.player).toBe("Mikel Merino");
-    expect(goal.text).toContain("득점"); // our Korean template
-    expect(goal.text).not.toContain("Synthetic sample"); // fixture text never passes through
     expect(goal.second).toBeDefined(); // ESPN gives second precision
     expect(goal.id).toMatch(/^espn:/);
 
-    const en = await new EspnProvider().fetchTimeline(match, "en");
-    const goalEn = en.find((e) => e.type === "GOAL")!;
-    expect(goalEn.text).toMatch(/scores/i);
-    expect(goalEn.text).not.toContain("Synthetic sample");
+    // license guard: the fixture's commentary text must never reach events
+    // (sentences are rendered from structure at view time)
+    expect(events.every((e) => e.text === undefined)).toBe(true);
   });
 });
 

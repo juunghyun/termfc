@@ -48,6 +48,40 @@ export type EventType =
   | "ADDED_TIME"
   | "UNKNOWN";
 
+/** Runtime enumeration of every EventType (kept in sync via `satisfies`). */
+export const ALL_EVENT_TYPES = [
+  "GOAL",
+  "OWN_GOAL",
+  "PENALTY_GOAL",
+  "PENALTY_MISS",
+  "ASSIST",
+  "SHOT",
+  "SAVE",
+  "FOUL",
+  "YELLOW",
+  "RED",
+  "CORNER",
+  "OFFSIDE",
+  "SUBSTITUTION",
+  "VAR",
+  "PERIOD_START",
+  "PERIOD_END",
+  "FULLTIME",
+  "COIN_TOSS",
+  "BREAK",
+  "RESUMED",
+  "ADDED_TIME",
+  "UNKNOWN",
+] as const satisfies readonly EventType[];
+
+// Compile-time exhaustiveness: fails to build when EventType gains a member
+// that is missing from ALL_EVENT_TYPES.
+true satisfies [Exclude<EventType, (typeof ALL_EVENT_TYPES)[number]>] extends [
+  never,
+]
+  ? true
+  : never;
+
 export type Salience = "high" | "low";
 
 const HIGH_SALIENCE: ReadonlySet<EventType> = new Set([
@@ -137,7 +171,15 @@ export interface TimelineEvent {
   teamSide?: "home" | "away";
   /** Best-effort player name extracted from source data. */
   player?: string;
-  /** Localized display sentence (source-provided or template-generated). */
+  /** Substitution facts (player coming on / going off), when known. */
+  playerIn?: string;
+  playerOut?: string;
+  /**
+   * Display sentence. As of v0.4 events are rendered from structure at view
+   * time and adapters no longer fill this; it survives on the model so
+   * pre-v0.4 recordings (which stored it) still parse. Never render it
+   * directly — it may contain source-feed prose.
+   */
   text?: string;
   /** Score right after this event, when the source provides it (goals). */
   scoreAfter?: { home: number; away: number };

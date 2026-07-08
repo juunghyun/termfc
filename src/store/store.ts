@@ -39,6 +39,8 @@ export function atomicWrite(file: string, data: string): void {
 
 export interface Config {
   lang?: Lang;
+  /** Commentary tone preset (v0.4+). Consumers validate with isTone(). */
+  tone?: string;
 }
 
 export function readConfig(): Config {

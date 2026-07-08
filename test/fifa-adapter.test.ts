@@ -55,22 +55,35 @@ describe("FifaProvider.fetchTimeline (real 2026 fixture)", () => {
     expect(goal!.injury).toBe(1);
     expect(goal!.teamSide).toBe("away"); // Spain scored
     expect(goal!.player).toBe("Mikel MERINO");
-    expect(goal!.text).toContain("득점");
     expect(goal!.scoreAfter).toEqual({ home: 0, away: 1 });
     expect(goal!.id).toMatch(/^fifa:/);
-
-    // Source-provided text passes through as-is (never re-templated)
-    const shot = events.find((e) => e.type === "SHOT");
-    expect(shot!.text).toContain("슈팅");
   });
 
-  it("passes unknown type codes through as UNKNOWN with text", async () => {
+  it("never emits feed prose — text is absent, facts are structured", async () => {
+    mockFetch([[/timelines/, fixture("fifa-timeline-ko.json")]]);
+    const events = await new FifaProvider().fetchTimeline(match, "ko");
+    // sentences are rendered from structure at view time; the adapter must
+    // not leak the feed's prose into events (or, via them, into recordings)
+    expect(events.every((e) => e.text === undefined)).toBe(true);
+
+    const sub = events.find((e) => e.type === "SUBSTITUTION");
+    expect(sub!.playerIn).toBe("NELSON SEMEDO");
+    expect(sub!.playerOut).toBe("NUNO MENDES");
+
+    const assist = events.find((e) => e.type === "ASSIST");
+    expect(assist!.player).toBe("Ferran TORRES");
+
+    const corner = events.find((e) => e.type === "CORNER");
+    expect(corner!.player).toBe("BRUNO FERNANDES");
+  });
+
+  it("passes unknown type codes through as UNKNOWN without text", async () => {
     const doc = JSON.parse(fixture("fifa-timeline-ko.json"));
     doc.Event[0].Type = 9999;
     mockFetch([[/timelines/, JSON.stringify(doc)]]);
     const events = await new FifaProvider().fetchTimeline(match, "ko");
     expect(events[0]!.type).toBe("UNKNOWN");
-    expect(events[0]!.text).toBeTruthy();
+    expect(events[0]!.text).toBeUndefined();
   });
 
   it("maps VAR review events via the data-file map", async () => {

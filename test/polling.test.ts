@@ -161,7 +161,7 @@ describe("PollingEngine waiting mode", () => {
     await vi.advanceTimersByTimeAsync(12_000); // second live tick
     const added = batches.flat().filter((e) => e.type === "ADDED_TIME");
     expect(added).toHaveLength(1); // once per phase, recorded via onEvents
-    expect(added[0]!.text).toContain("+4");
+    expect(added[0]!.injury).toBe(4);
     engine.stop();
   });
 

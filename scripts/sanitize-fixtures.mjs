@@ -52,7 +52,7 @@ export function assistPlayerFrom(text) {
 
 // ---------------------------------------------------------------------------
 // Sentence synthesis — our own wording, generated from structured facts.
-// Mirrors the spirit of eventSentence() in src/core/i18n.ts, extended with
+// Mirrors the spirit of the tone templates in src/core/tone.ts, extended with
 // the facts a recorded fixture can carry (player, sub in/out, period).
 // ---------------------------------------------------------------------------
 

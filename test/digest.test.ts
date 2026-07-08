@@ -43,22 +43,21 @@ const eventOf = (l: Line) => (l.kind === "event" ? l.e : null);
 describe("synthesizeAddedTime", () => {
   it("emits once when injury first appears in a phase", () => {
     const e = synthesizeAddedTime(st({}), st({ injury: 4 }), {
-      lang: "ko",
       source: "fifa",
     });
     expect(e).not.toBeNull();
     expect(e!.type).toBe("ADDED_TIME");
     expect(e!.id).toBe("local:added-time-FIRST_HALF");
-    expect(e!.text).toBe("추가시간 +4분");
+    expect(e!.injury).toBe(4); // structured fact — sentences render from it
+    expect(e!.text).toBeUndefined(); // no prose is baked into the event
     expect(e!.period).toBe(3); // sorts correctly in replay files
   });
 
   it("emits on the very first state when injury is already set", () => {
     const e = synthesizeAddedTime(null, st({ injury: 3 }), {
-      lang: "en",
       source: "espn",
     });
-    expect(e!.text).toBe("+3 minutes added");
+    expect(e!.injury).toBe(3);
     expect(e!.source).toBe("espn");
   });
 
@@ -66,14 +65,12 @@ describe("synthesizeAddedTime", () => {
     const announced = st({ injury: 4 });
     expect(
       synthesizeAddedTime(announced, st({ injury: 4 }), {
-        lang: "ko",
         source: "fifa",
       }),
     ).toBeNull();
     // revised upwards mid-stoppage — still the same phase, still silent
     expect(
       synthesizeAddedTime(announced, st({ injury: 6 }), {
-        lang: "ko",
         source: "fifa",
       }),
     ).toBeNull();
@@ -83,21 +80,16 @@ describe("synthesizeAddedTime", () => {
     const e = synthesizeAddedTime(
       st({ injury: 4 }),
       st({ phase: "SECOND_HALF", minute: 90, injury: 5 }),
-      { lang: "ko", source: "fifa" },
+      { source: "fifa" },
     );
     expect(e!.id).toBe("local:added-time-SECOND_HALF");
     expect(e!.period).toBe(5);
   });
 
   it("stays silent without injury time", () => {
+    expect(synthesizeAddedTime(null, st({}), { source: "fifa" })).toBeNull();
     expect(
-      synthesizeAddedTime(null, st({}), { lang: "ko", source: "fifa" }),
-    ).toBeNull();
-    expect(
-      synthesizeAddedTime(null, st({ injury: 0 }), {
-        lang: "ko",
-        source: "fifa",
-      }),
+      synthesizeAddedTime(null, st({ injury: 0 }), { source: "fifa" }),
     ).toBeNull();
   });
 });

@@ -35,7 +35,6 @@
    "period": 2,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "동전 던지기 — 스페인 선축",
    "source": "fifa",
    "seq": 0
   },
@@ -44,7 +43,6 @@
    "type": "PERIOD_START",
    "minute": 0,
    "period": 3,
-   "text": "전반 시작",
    "source": "fifa",
    "seq": 1
   },
@@ -56,7 +54,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 파울",
    "source": "fifa",
    "seq": 2
   },
@@ -68,7 +65,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Mikel OYARZABAL",
-   "text": "Mikel OYARZABAL (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 3
   },
@@ -79,7 +75,6 @@
    "period": 3,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "포르투갈 골키퍼 선방",
    "source": "fifa",
    "seq": 4
   },
@@ -91,7 +86,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "JOAO CANCELO",
-   "text": "JOAO CANCELO (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 5
   },
@@ -103,7 +97,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Mikel OYARZABAL",
-   "text": "Mikel OYARZABAL (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 6
   },
@@ -114,7 +107,7 @@
    "period": 3,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "BRUNO FERNANDES (포르투갈) 코너킥",
+   "player": "BRUNO FERNANDES",
    "source": "fifa",
    "seq": 7
   },
@@ -126,7 +119,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "PEDRO NETO",
-   "text": "PEDRO NETO (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 8
   },
@@ -138,7 +130,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "JOAO FELIX",
-   "text": "JOAO FELIX (포르투갈) 파울",
    "source": "fifa",
    "seq": 9
   },
@@ -150,7 +141,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "CRISTIANO RONALDO",
-   "text": "CRISTIANO RONALDO (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 10
   },
@@ -161,7 +151,6 @@
    "period": 3,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "스페인 골키퍼 선방",
    "source": "fifa",
    "seq": 11
   },
@@ -172,7 +161,7 @@
    "period": 3,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "NUNO MENDES (포르투갈) 코너킥",
+   "player": "NUNO MENDES",
    "source": "fifa",
    "seq": 12
   },
@@ -184,7 +173,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Alex BAENA",
-   "text": "Alex BAENA (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 13
   },
@@ -196,7 +184,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 14
   },
@@ -207,7 +194,6 @@
    "period": 3,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "포르투갈 골키퍼 선방",
    "source": "fifa",
    "seq": 15
   },
@@ -219,7 +205,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Alex BAENA",
-   "text": "Alex BAENA (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 16
   },
@@ -230,7 +215,6 @@
    "period": 3,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "포르투갈 골키퍼 선방",
    "source": "fifa",
    "seq": 17
   },
@@ -241,7 +225,7 @@
    "period": 3,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "Alex BAENA (스페인) 코너킥",
+   "player": "Alex BAENA",
    "source": "fifa",
    "seq": 18
   },
@@ -253,7 +237,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Alex BAENA",
-   "text": "Alex BAENA (스페인) 파울",
    "source": "fifa",
    "seq": 19
   },
@@ -265,7 +248,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "BRUNO FERNANDES",
-   "text": "BRUNO FERNANDES (포르투갈) 오프사이드",
    "source": "fifa",
    "seq": 20
   },
@@ -277,7 +259,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "JOAO CANCELO",
-   "text": "JOAO CANCELO (포르투갈) 파울",
    "source": "fifa",
    "seq": 21
   },
@@ -289,7 +270,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Pedro PORRO",
-   "text": "Pedro PORRO (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 22
   },
@@ -298,7 +278,6 @@
    "type": "BREAK",
    "minute": 23,
    "period": 3,
-   "text": "수분 섭취 휴식 — 경기 일시 중단",
    "source": "fifa",
    "seq": 23
   },
@@ -307,7 +286,6 @@
    "type": "RESUMED",
    "minute": 26,
    "period": 3,
-   "text": "경기 재개",
    "source": "fifa",
    "seq": 24
   },
@@ -319,7 +297,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "PEDRO NETO",
-   "text": "PEDRO NETO (포르투갈) 파울",
    "source": "fifa",
    "seq": 25
   },
@@ -330,7 +307,7 @@
    "period": 3,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "Alex BAENA (스페인) 코너킥",
+   "player": "Alex BAENA",
    "source": "fifa",
    "seq": 26
   },
@@ -342,7 +319,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Dani OLMO",
-   "text": "Dani OLMO (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 27
   },
@@ -354,7 +330,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Aymeric LAPORTE",
-   "text": "Aymeric LAPORTE (스페인) 파울",
    "source": "fifa",
    "seq": 28
   },
@@ -366,7 +341,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 파울",
    "source": "fifa",
    "seq": 29
   },
@@ -378,7 +352,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "CRISTIANO RONALDO",
-   "text": "CRISTIANO RONALDO (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 30
   },
@@ -389,7 +362,6 @@
    "period": 3,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "스페인 골키퍼 선방",
    "source": "fifa",
    "seq": 31
   },
@@ -401,7 +373,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Pedro PORRO",
-   "text": "Pedro PORRO (스페인) 파울",
    "source": "fifa",
    "seq": 32
   },
@@ -412,7 +383,7 @@
    "period": 3,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "NUNO MENDES (포르투갈) 코너킥",
+   "player": "NUNO MENDES",
    "source": "fifa",
    "seq": 33
   },
@@ -424,7 +395,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "NUNO MENDES",
-   "text": "NUNO MENDES (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 34
   },
@@ -436,7 +406,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "RODRI",
-   "text": "RODRI (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 35
   },
@@ -449,7 +418,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 오프사이드",
    "source": "fifa",
    "seq": 36
   },
@@ -462,7 +430,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "RUBEN DIAS",
-   "text": "RUBEN DIAS (포르투갈) 파울",
    "source": "fifa",
    "seq": 37
   },
@@ -475,7 +442,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Pau CUBARSI",
-   "text": "Pau CUBARSI (스페인) 파울",
    "source": "fifa",
    "seq": 38
   },
@@ -488,7 +454,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "JOAO FELIX",
-   "text": "JOAO FELIX (포르투갈) 파울",
    "source": "fifa",
    "seq": 39
   },
@@ -498,7 +463,6 @@
    "minute": 45,
    "injury": 7,
    "period": 3,
-   "text": "전반 종료",
    "source": "fifa",
    "seq": 40
   },
@@ -507,7 +471,6 @@
    "type": "PERIOD_START",
    "minute": 45,
    "period": 5,
-   "text": "후반 시작",
    "source": "fifa",
    "seq": 41
   },
@@ -519,7 +482,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Dani OLMO",
-   "text": "Dani OLMO (스페인) 파울",
    "source": "fifa",
    "seq": 42
   },
@@ -531,7 +493,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 파울",
    "source": "fifa",
    "seq": 43
   },
@@ -542,7 +503,8 @@
    "period": 5,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "선수 교체 (포르투갈): NELSON SEMEDO IN, NUNO MENDES OUT",
+   "playerIn": "NELSON SEMEDO",
+   "playerOut": "NUNO MENDES",
    "source": "fifa",
    "seq": 44
   },
@@ -554,7 +516,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "CRISTIANO RONALDO",
-   "text": "CRISTIANO RONALDO (포르투갈) 오프사이드",
    "source": "fifa",
    "seq": 45
   },
@@ -566,7 +527,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "CRISTIANO RONALDO",
-   "text": "CRISTIANO RONALDO (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 46
   },
@@ -578,7 +538,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 파울",
    "source": "fifa",
    "seq": 47
   },
@@ -590,7 +549,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "PEDRI",
-   "text": "PEDRI (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 48
   },
@@ -601,7 +559,7 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "Alex BAENA (스페인) 코너킥",
+   "player": "Alex BAENA",
    "source": "fifa",
    "seq": 49
   },
@@ -613,7 +571,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 50
   },
@@ -624,7 +581,7 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "Alex BAENA (스페인) 코너킥",
+   "player": "Alex BAENA",
    "source": "fifa",
    "seq": 51
   },
@@ -636,7 +593,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "PEDRI",
-   "text": "PEDRI (스페인) 파울",
    "source": "fifa",
    "seq": 52
   },
@@ -648,7 +604,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Alex BAENA",
-   "text": "Alex BAENA (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 53
   },
@@ -659,7 +614,6 @@
    "period": 5,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "포르투갈 골키퍼 선방",
    "source": "fifa",
    "seq": 54
   },
@@ -668,7 +622,6 @@
    "type": "BREAK",
    "minute": 68,
    "period": 5,
-   "text": "수분 섭취 휴식 — 경기 일시 중단",
    "source": "fifa",
    "seq": 55
   },
@@ -679,7 +632,8 @@
    "period": 5,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "선수 교체 (포르투갈): RAFAEL LEAO IN, JOAO FELIX OUT",
+   "playerIn": "RAFAEL LEAO",
+   "playerOut": "JOAO FELIX",
    "source": "fifa",
    "seq": 56
   },
@@ -690,7 +644,8 @@
    "period": 5,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "선수 교체 (포르투갈): DIOGO DALOT IN, JOAO CANCELO OUT",
+   "playerIn": "DIOGO DALOT",
+   "playerOut": "JOAO CANCELO",
    "source": "fifa",
    "seq": 57
   },
@@ -699,7 +654,6 @@
    "type": "RESUMED",
    "minute": 72,
    "period": 5,
-   "text": "경기 재개",
    "source": "fifa",
    "seq": 58
   },
@@ -711,7 +665,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "NELSON SEMEDO",
-   "text": "NELSON SEMEDO (포르투갈) 파울",
    "source": "fifa",
    "seq": 59
   },
@@ -723,7 +676,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 60
   },
@@ -734,7 +686,6 @@
    "period": 5,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "포르투갈 골키퍼 선방",
    "source": "fifa",
    "seq": 61
   },
@@ -745,7 +696,7 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "Alex BAENA (스페인) 코너킥",
+   "player": "Alex BAENA",
    "source": "fifa",
    "seq": 62
   },
@@ -756,7 +707,8 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "선수 교체 (스페인): Ferran TORRES IN, Alex BAENA OUT",
+   "playerIn": "Ferran TORRES",
+   "playerOut": "Alex BAENA",
    "source": "fifa",
    "seq": 63
   },
@@ -768,7 +720,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "VITINHA",
-   "text": "VITINHA (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 64
   },
@@ -780,7 +731,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "BRUNO FERNANDES",
-   "text": "BRUNO FERNANDES (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 65
   },
@@ -792,7 +742,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Ferran TORRES",
-   "text": "Ferran TORRES (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 66
   },
@@ -804,7 +753,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Dani OLMO",
-   "text": "Dani OLMO (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 67
   },
@@ -815,7 +763,7 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "Lamine YAMAL (스페인) 코너킥",
+   "player": "Lamine YAMAL",
    "source": "fifa",
    "seq": 68
   },
@@ -826,7 +774,7 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "Lamine YAMAL (스페인) 코너킥",
+   "player": "Lamine YAMAL",
    "source": "fifa",
    "seq": 69
   },
@@ -838,7 +786,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "RODRI",
-   "text": "RODRI (스페인) 파울",
    "source": "fifa",
    "seq": 70
   },
@@ -849,7 +796,8 @@
    "period": 5,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "선수 교체 (포르투갈): BERNARDO SILVA IN, VITINHA OUT",
+   "playerIn": "BERNARDO SILVA",
+   "playerOut": "VITINHA",
    "source": "fifa",
    "seq": 71
   },
@@ -860,7 +808,8 @@
    "period": 5,
    "teamSide": "home",
    "teamCode": "POR",
-   "text": "선수 교체 (포르투갈): FRANCISCO CONCEICAO IN, PEDRO NETO OUT",
+   "playerIn": "FRANCISCO CONCEICAO",
+   "playerOut": "PEDRO NETO",
    "source": "fifa",
    "seq": 72
   },
@@ -872,7 +821,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Lamine YAMAL",
-   "text": "Lamine YAMAL (스페인) 파울",
    "source": "fifa",
    "seq": 73
   },
@@ -883,7 +831,8 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "선수 교체 (스페인): Mikel MERINO IN, Dani OLMO OUT",
+   "playerIn": "Mikel MERINO",
+   "playerOut": "Dani OLMO",
    "source": "fifa",
    "seq": 74
   },
@@ -894,7 +843,8 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "선수 교체 (스페인): Fabian RUIZ IN, PEDRI OUT",
+   "playerIn": "Fabian RUIZ",
+   "playerOut": "PEDRI",
    "source": "fifa",
    "seq": 75
   },
@@ -906,7 +856,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "BERNARDO SILVA",
-   "text": "BERNARDO SILVA (포르투갈) 경고 (옐로카드)",
    "source": "fifa",
    "seq": 76
   },
@@ -918,7 +867,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "BERNARDO SILVA",
-   "text": "BERNARDO SILVA (포르투갈) 파울",
    "source": "fifa",
    "seq": 77
   },
@@ -930,7 +878,7 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "어시스트: Ferran TORRES",
+   "player": "Ferran TORRES",
    "source": "fifa",
    "seq": 78
   },
@@ -943,7 +891,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Mikel MERINO",
-   "text": "Mikel MERINO (스페인) 슈팅 시도",
    "source": "fifa",
    "seq": 79
   },
@@ -956,7 +903,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Mikel MERINO",
-   "text": "Mikel MERINO (스페인) 득점!",
    "scoreAfter": {
     "home": 0,
     "away": 1
@@ -973,7 +919,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "RENATO VEIGA",
-   "text": "RENATO VEIGA (포르투갈) 경고 (옐로카드)",
    "source": "fifa",
    "seq": 81
   },
@@ -986,7 +931,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "BERNARDO SILVA",
-   "text": "BERNARDO SILVA (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 82
   },
@@ -998,7 +942,8 @@
    "period": 5,
    "teamSide": "away",
    "teamCode": "ESP",
-   "text": "선수 교체 (스페인): Borja IGLESIAS IN, Mikel OYARZABAL OUT",
+   "playerIn": "Borja IGLESIAS",
+   "playerOut": "Mikel OYARZABAL",
    "source": "fifa",
    "seq": 83
   },
@@ -1011,7 +956,6 @@
    "teamSide": "away",
    "teamCode": "ESP",
    "player": "Ferran TORRES",
-   "text": "Ferran TORRES (스페인) 경고 (옐로카드)",
    "source": "fifa",
    "seq": 84
   },
@@ -1024,7 +968,6 @@
    "teamSide": "home",
    "teamCode": "POR",
    "player": "JOAO NEVES",
-   "text": "JOAO NEVES (포르투갈) 슈팅 시도",
    "source": "fifa",
    "seq": 85
   },
@@ -1034,7 +977,6 @@
    "minute": 90,
    "injury": 9,
    "period": 5,
-   "text": "후반 종료",
    "source": "fifa",
    "seq": 86
   },
@@ -1043,7 +985,6 @@
    "type": "FULLTIME",
    "minute": 99,
    "period": 10,
-   "text": "경기 종료",
    "source": "fifa",
    "seq": 87
   }
