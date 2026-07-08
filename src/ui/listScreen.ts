@@ -1,14 +1,15 @@
 import * as readline from "node:readline/promises";
-import { labels } from "../core/i18n.js";
+import { labels, roundLabel } from "../core/i18n.js";
 import {
   isLivePhase,
   type Lang,
   type Match,
+  type StageKind,
 } from "../core/model.js";
 import { phaseLabel } from "../core/state.js";
 import { bold, cyan, dim, gray, green, red, yellow } from "./ansi.js";
 
-function kickoffLabel(iso: string, lang: Lang): string {
+export function kickoffLabel(iso: string, lang: Lang): string {
   const d = new Date(iso);
   return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", {
     month: "short",
@@ -39,7 +40,7 @@ function matchLine(m: Match, lang: Lang): string {
   return `${dim(kickoffLabel(m.kickoff, lang).padEnd(20))} ${vs} ${dim("vs")} ${vs2}`;
 }
 
-function fmtCountdown(ms: number): string {
+export function fmtCountdown(ms: number): string {
   const s = Math.max(0, Math.floor(ms / 1000));
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
@@ -107,6 +108,56 @@ export function renderList(matches: Match[], opts: ListOptions): Match[] {
     } else {
       out.write(`  ${dim(l.noLiveMatches)}\n\n`);
     }
+  }
+  return pickable;
+}
+
+const FULL_ORDER: readonly (StageKind | "OTHER")[] = [
+  "GROUP",
+  "R32",
+  "R16",
+  "QF",
+  "SF",
+  "THIRD",
+  "FINAL",
+  "OTHER",
+];
+
+/**
+ * Whole-tournament schedule grouped by round (v0.3): every match is
+ * numbered and pickable — live joins now, upcoming enters waiting mode.
+ */
+export function renderFullSchedule(
+  matches: Match[],
+  opts: ListOptions,
+): Match[] {
+  const l = labels(opts.lang);
+  const out = process.stdout;
+  const pickable: Match[] = [];
+  if (opts.staleAt) {
+    const at = new Date(opts.staleAt).toTimeString().slice(0, 5);
+    out.write(yellow(`  ⚠ ${l.offline} · ${at} ${l.staleData}\n\n`));
+  }
+  const byStage = new Map<StageKind | "OTHER", Match[]>();
+  for (const m of matches) {
+    const key = m.stageKind ?? "OTHER";
+    const list = byStage.get(key) ?? [];
+    list.push(m);
+    byStage.set(key, list);
+  }
+  for (const kind of FULL_ORDER) {
+    const list = byStage.get(kind);
+    if (!list?.length) continue;
+    list.sort((a, b) => a.kickoff.localeCompare(b.kickoff));
+    const title =
+      kind === "OTHER" ? l.schedule : roundLabel(kind, l);
+    out.write(`  ${bold(cyan(title))}\n`);
+    for (const m of list) {
+      pickable.push(m);
+      const no = String(pickable.length).padStart(3);
+      out.write(`  ${dim(no + ".")} ${matchLine(m, opts.lang)}\n`);
+    }
+    out.write("\n");
   }
   return pickable;
 }

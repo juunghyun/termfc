@@ -54,6 +54,10 @@ export class FailoverProvider implements MatchDataProvider {
     return this.call((p) => p.fetchTimeline(match, lang));
   }
 
+  fetchLiveMatchIds(lang: Lang): Promise<Set<string>> {
+    return this.call((p) => p.fetchLiveMatchIds(lang));
+  }
+
   private async call<T>(fn: (p: MatchDataProvider) => Promise<T>): Promise<T> {
     try {
       const result = await fn(this.active);

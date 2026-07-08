@@ -23,12 +23,20 @@ export class SchemaError extends Error {
  */
 export interface MatchDataProvider {
   readonly name: SourceName;
-  /** Schedule window around today (recent results + upcoming), normalized. */
+  /**
+   * Every match the source knows, normalized. FIFA covers the whole
+   * tournament; ESPN only a near window (documented degradation).
+   */
   fetchSchedule(lang: Lang): Promise<Match[]>;
   /** Current live score/clock/phase for a match; null if unavailable. */
   fetchMatchState(match: Match, lang: Lang): Promise<MatchState | null>;
   /** Full commentary timeline snapshot for a match. */
   fetchTimeline(match: Match, lang: Lang): Promise<TimelineEvent[]>;
+  /**
+   * Cheap kickoff probe: native ids of matches currently in progress.
+   * Waiting mode polls only this — never the calendar (decision doc).
+   */
+  fetchLiveMatchIds(lang: Lang): Promise<Set<string>>;
 }
 
 export const POLITE_HEADERS = {

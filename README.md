@@ -75,9 +75,11 @@ espn.com use in the browser. It is **not affiliated with or endorsed by FIFA
 or ESPN**. These endpoints are undocumented and may change or disappear at
 any time — the adapter layer isolates that risk, and polling is deliberately
 polite (~10s intervals, identified User-Agent). Match facts (scores, times,
-events) are not copyrightable; ESPN's prose commentary is never
-redistributed — sentences for the ESPN fallback are generated locally from
-structured event data.
+events) are not copyrightable, and no FIFA/ESPN prose ships with this
+package or repo: ESPN-fallback sentences are always generated locally from
+structured event data, and the bundled demo match and recorded test fixtures
+carry locally synthesized sentences too (`scripts/sanitize-fixtures.mjs`).
+FIFA's own feed text only appears live on screen while you watch.
 
 ## Development
 
@@ -86,8 +88,9 @@ npm install
 npm test              # vitest — unit + real-response fixture tests
 npm run build         # tsup -> dist/cli.js (single ESM file)
 node dist/cli.js demo
-node scripts/dump-fifa-events.mjs   # refresh event-code map from live data
-node scripts/make-demo.mjs          # rebuild the bundled demo match
+node scripts/dump-fifa-events.mjs     # refresh event-code map from live data
+node scripts/sanitize-fixtures.mjs    # re-synthesize fixture sentences (no source prose)
+node scripts/make-demo.mjs            # rebuild the bundled demo match
 ```
 
 Architecture (ports & adapters): `core/` pure logic (model, diff, clock,

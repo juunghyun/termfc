@@ -59,7 +59,7 @@ describe("FifaProvider.fetchTimeline (real 2026 fixture)", () => {
     expect(goal!.scoreAfter).toEqual({ home: 0, away: 1 });
     expect(goal!.id).toMatch(/^fifa:/);
 
-    // Korean official text passthrough (never re-templated)
+    // Source-provided text passes through as-is (never re-templated)
     const shot = events.find((e) => e.type === "SHOT");
     expect(shot!.text).toContain("슈팅");
   });
@@ -139,5 +139,48 @@ describe("FifaProvider.fetchSchedule (real calendar fixture)", () => {
     expect(semi.home.code).toBe("TBD");
     expect(semi.home.name).toBe("W97");
     expect(semi.home.flag).toBe("🏳️");
+  });
+});
+
+describe("FifaProvider.fetchSchedule (full-tournament fixture)", () => {
+  it("maps group, stageKind and matchNumber", async () => {
+    mockFetch([
+      [/calendar\/matches/, fixture("fifa-calendar-full-sample.json")],
+    ]);
+    const matches = await new FifaProvider().fetchSchedule("en");
+    expect(matches.length).toBe(15);
+
+    const opener = matches.find((m) => m.matchNumber === 1)!;
+    expect(opener.stageKind).toBe("GROUP");
+    expect(opener.group).toBe("A");
+
+    const r32 = matches.find((m) => m.matchNumber === 74)!;
+    expect(r32.stageKind).toBe("R32");
+    expect(r32.group).toBeUndefined();
+
+    const final = matches.find((m) => m.matchNumber === 104)!;
+    expect(final.stageKind).toBe("FINAL");
+    expect(final.home.name).toBe("W101"); // still undecided
+  });
+
+  it("falls back to match-number ranges for unknown stage ids", async () => {
+    const doc = JSON.parse(fixture("fifa-calendar-full-sample.json"));
+    for (const m of doc.Results) m.IdStage = "999999";
+    mockFetch([[/calendar\/matches/, JSON.stringify(doc)]]);
+    const matches = await new FifaProvider().fetchSchedule("en");
+    expect(matches.find((m) => m.matchNumber === 90)!.stageKind).toBe("R16");
+    expect(matches.find((m) => m.matchNumber === 103)!.stageKind).toBe(
+      "THIRD",
+    );
+  });
+
+  it("extracts the group letter from Korean group names", async () => {
+    const doc = JSON.parse(fixture("fifa-calendar-full-sample.json"));
+    for (const m of doc.Results) {
+      if (m.GroupName?.[0]) m.GroupName[0].Description = "B조";
+    }
+    mockFetch([[/calendar\/matches/, JSON.stringify(doc)]]);
+    const matches = await new FifaProvider().fetchSchedule("ko");
+    expect(matches.find((m) => m.matchNumber === 1)!.group).toBe("B");
   });
 });

@@ -1,4 +1,4 @@
-import type { Lang, TimelineEvent } from "./model.js";
+import type { Lang, StageKind, TimelineEvent } from "./model.js";
 
 export const LABELS = {
   ko: {
@@ -35,6 +35,18 @@ export const LABELS = {
     recorded: "녹화됨",
     loading: "불러오는 중...",
     noData: "데이터를 가져오지 못했습니다",
+    groupStage: "조별리그",
+    roundR32: "32강",
+    roundR16: "16강",
+    roundQF: "8강",
+    roundSF: "준결승",
+    roundThird: "3위 결정전",
+    roundFinal: "결승",
+    noBracketData: "대진표를 구성할 대회 전체 데이터를 가져오지 못했습니다",
+    standingsCols: ["경기", "승", "무", "패", "득실", "승점"],
+    kickoffIn: "킥오프까지",
+    waitingKickoff: "킥오프 대기 중 — 시작하면 자동으로 중계가 시작됩니다",
+    foldedNotice: "{n}개의 일반 이벤트 접힘",
   },
   en: {
     live: "LIVE",
@@ -70,6 +82,18 @@ export const LABELS = {
     recorded: "recorded",
     loading: "Loading...",
     noData: "Failed to fetch data",
+    groupStage: "Group stage",
+    roundR32: "Round of 32",
+    roundR16: "Round of 16",
+    roundQF: "Quarter-finals",
+    roundSF: "Semi-finals",
+    roundThird: "Third place",
+    roundFinal: "Final",
+    noBracketData: "Couldn't fetch full-tournament data for the bracket",
+    standingsCols: ["P", "W", "D", "L", "GD", "Pts"],
+    kickoffIn: "Kick-off in",
+    waitingKickoff: "Waiting for kick-off — commentary starts automatically",
+    foldedNotice: "{n} routine events folded",
   },
 } as const;
 
@@ -77,6 +101,25 @@ export type Labels = (typeof LABELS)[Lang];
 
 export function labels(lang: Lang): Labels {
   return LABELS[lang];
+}
+
+export function roundLabel(kind: StageKind, l: Labels): string {
+  switch (kind) {
+    case "GROUP":
+      return l.groupStage;
+    case "R32":
+      return l.roundR32;
+    case "R16":
+      return l.roundR16;
+    case "QF":
+      return l.roundQF;
+    case "SF":
+      return l.roundSF;
+    case "THIRD":
+      return l.roundThird;
+    case "FINAL":
+      return l.roundFinal;
+  }
 }
 
 interface SentenceCtx {
@@ -142,6 +185,8 @@ export function eventSentence(
         return "경기 일시 중단";
       case "RESUMED":
         return "경기 재개";
+      case "ADDED_TIME":
+        return "추가시간 표시";
       default:
         return "경기 상황";
     }
@@ -188,6 +233,8 @@ export function eventSentence(
       return "Match paused";
     case "RESUMED":
       return "Match resumed";
+    case "ADDED_TIME":
+      return "Added time signalled";
     default:
       return "Match event";
   }
@@ -214,5 +261,6 @@ export const EVENT_ICON: Record<string, string> = {
   COIN_TOSS: "🪙",
   BREAK: "💧",
   RESUMED: "▶️ ",
+  ADDED_TIME: "⏱ ",
   UNKNOWN: "·",
 };

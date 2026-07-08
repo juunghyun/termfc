@@ -4,25 +4,25 @@ import { normalizeEventText, normalizePlayerName } from "../src/core/text.js";
 describe("normalizeEventText", () => {
   it("collapses doubled spaces", () => {
     expect(
-      normalizeEventText("BRUNO FERNANDES (포르투갈)  선수가 코너킥을 얻었습니다."),
-    ).toBe("Bruno Fernandes (포르투갈) 선수가 코너킥을 얻었습니다.");
+      normalizeEventText("BRUNO FERNANDES (포르투갈)  코너킥을 준비합니다."),
+    ).toBe("Bruno Fernandes (포르투갈) 코너킥을 준비합니다.");
   });
 
   it("reattaches detached particles", () => {
-    expect(normalizeEventText("포르투갈 의 골키퍼가 선방을 기록합니다.")).toBe(
-      "포르투갈의 골키퍼가 선방을 기록합니다.",
+    expect(normalizeEventText("포르투갈 의 골키퍼가 공을 쳐냅니다.")).toBe(
+      "포르투갈의 골키퍼가 공을 쳐냅니다.",
     );
     expect(
-      normalizeEventText("주심이 Bernardo Silva (포르투갈) 에게 경고 조치를 합니다."),
-    ).toBe("주심이 Bernardo Silva (포르투갈)에게 경고 조치를 합니다.");
+      normalizeEventText("주심이 Bernardo Silva (포르투갈) 에게 카드를 보여줍니다."),
+    ).toBe("주심이 Bernardo Silva (포르투갈)에게 카드를 보여줍니다.");
   });
 
   it("title-cases all-caps names inside multi-word runs", () => {
-    expect(normalizeEventText("Lamine YAMAL (스페인) 선수가 파울을 범했습니다.")).toBe(
-      "Lamine Yamal (스페인) 선수가 파울을 범했습니다.",
+    expect(normalizeEventText("Lamine YAMAL (스페인) 선수의 반칙 장면입니다.")).toBe(
+      "Lamine Yamal (스페인) 선수의 반칙 장면입니다.",
     );
-    expect(normalizeEventText("JOAO CANCELO, 골문을 향해 슈팅을 시도합니다.")).toBe(
-      "Joao Cancelo, 골문을 향해 슈팅을 시도합니다.",
+    expect(normalizeEventText("JOAO CANCELO, 문전에서 슈팅했습니다.")).toBe(
+      "Joao Cancelo, 문전에서 슈팅했습니다.",
     );
   });
 
@@ -32,8 +32,8 @@ describe("normalizeEventText", () => {
   });
 
   it("title-cases standalone single-name players of 4+ letters", () => {
-    expect(normalizeEventText("RODRI (스페인), 골문을 향해 슈팅을 시도합니다.")).toBe(
-      "Rodri (스페인), 골문을 향해 슈팅을 시도합니다.",
+    expect(normalizeEventText("RODRI (스페인), 중거리 슈팅입니다.")).toBe(
+      "Rodri (스페인), 중거리 슈팅입니다.",
     );
   });
 

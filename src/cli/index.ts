@@ -22,10 +22,12 @@ import {
   REPLAY_DIR,
   writeConfig,
   writeScheduleCache,
+  type Coverage,
 } from "../store/store.js";
 import { bold, cyan, dim, red, yellow } from "../ui/ansi.js";
 import { renderBanner } from "../ui/banner.js";
-import { renderList, pickMatch } from "../ui/listScreen.js";
+import { renderBracket } from "../ui/bracketScreen.js";
+import { renderFullSchedule, renderList, pickMatch } from "../ui/listScreen.js";
 import { MatchScreen } from "../ui/matchScreen.js";
 import pkg from "../../package.json" with { type: "json" };
 
@@ -68,7 +70,8 @@ const HELP = `
   ${bold("usage")}
     termfc                     ${dim("live + upcoming matches, pick one to join")}
     termfc live                ${dim("matches in progress")}
-    termfc schedule            ${dim("full schedule window")}
+    termfc schedule            ${dim("full tournament schedule, pick one to join")}
+    termfc bracket             ${dim("group tables + knockout bracket")}
     termfc watch <team|id>     ${dim("join a match (e.g. termfc watch KOR)")}
     termfc replay [file]       ${dim("replay a recorded match (no arg: list recordings)")}
     termfc demo                ${dim("bundled demo match (no network needed)")}
@@ -114,26 +117,60 @@ async function main(): Promise<void> {
     return;
   }
 
-  const { matches, staleAt } = await loadSchedule(provider, espn, lang);
+  const { matches, staleAt, coverage } = await loadSchedule(provider, espn, lang);
   if (matches.length === 0) {
     console.log(red(`  ${l.noData}\n`));
     process.exitCode = 1;
     return;
   }
 
+  if (cmd === "bracket") {
+    // The bracket needs the whole tournament; an ESPN-fallback window fetch
+    // can't build it — prefer the (possibly stale) full FIFA snapshot then.
+    let data: LoadedSchedule = { matches, staleAt, coverage };
+    if (data.coverage !== "full") {
+      const cachedFull = readScheduleCache(lang);
+      if (cachedFull?.coverage === "full") {
+        data = {
+          matches: cachedFull.matches,
+          staleAt: cachedFull.fetchedAt,
+          coverage: "full",
+        };
+      } else {
+        console.log(red(`  ${l.noBracketData}\n`));
+        process.exitCode = 1;
+        return;
+      }
+    }
+    const pickable = renderBracket(data.matches, {
+      lang,
+      staleAt: data.staleAt,
+    });
+    if (process.stdin.isTTY && pickable.length > 0) {
+      const choice = await pickMatch(pickable, lang);
+      if (choice) await enterMatch(choice, provider, espn, lang, flags);
+    }
+    return;
+  }
   if (cmd === "schedule") {
-    renderList(matches, { lang, staleAt });
+    const pickable = renderFullSchedule(matches, { lang, staleAt });
+    // Piped/scripted use stays view-only and exits immediately (backcompat).
+    if (process.stdin.isTTY && pickable.length > 0) {
+      const choice = await pickMatch(pickable, lang);
+      if (choice) await enterMatch(choice, provider, espn, lang, flags);
+    }
     return;
   }
   if (cmd === "live") {
-    const live = matches.filter((m) => isLivePhase(m.phase));
+    const near = nearWindow(matches);
+    const live = near.filter((m) => isLivePhase(m.phase));
     const pickable = renderList(
-      live.length > 0 ? live : matches.filter((m) => m.phase === "SCHEDULED").slice(0, 5),
+      live.length > 0 ? live : near.filter((m) => m.phase === "SCHEDULED").slice(0, 5),
       { lang, staleAt },
     );
     if (live.length === 0) return;
     const choice = await pickMatch(pickable, lang);
-    if (choice) await watch(choice, provider, lang, flags);
+    if (choice) await enterMatch(choice, provider, espn, lang, flags);
     return;
   }
   if (cmd === "watch") {
@@ -148,7 +185,7 @@ async function main(): Promise<void> {
       process.exitCode = 1;
       return;
     }
-    await watch(match, provider, lang, flags);
+    await enterMatch(match, provider, espn, lang, flags);
     return;
   }
   if (cmd !== undefined) {
@@ -156,37 +193,64 @@ async function main(): Promise<void> {
     return;
   }
 
-  // Default flow: list + picker
-  const pickable = renderList(matches, { lang, staleAt });
+  // Default flow: list + picker (near window, as before v0.3)
+  const pickable = renderList(nearWindow(matches), { lang, staleAt });
   const choice = await pickMatch(pickable, lang);
-  if (choice) await watch(choice, provider, lang, flags);
+  if (choice) await enterMatch(choice, provider, espn, lang, flags);
+}
+
+interface LoadedSchedule {
+  matches: Match[];
+  staleAt: number | null;
+  coverage: Coverage;
 }
 
 async function loadSchedule(
   provider: FailoverProvider,
   espn: EspnProvider,
   lang: Lang,
-): Promise<{ matches: Match[]; staleAt: number | null }> {
+): Promise<LoadedSchedule> {
   const cached = readScheduleCache(lang);
   if (cached && isScheduleFresh(cached)) {
-    return { matches: cached.matches, staleAt: null };
+    return { matches: cached.matches, staleAt: null, coverage: cached.coverage };
   }
   try {
     const matches = await provider.fetchSchedule(lang);
+    const source = provider.activeSource;
+    // FIFA returns the whole tournament; ESPN fallback only a near window.
+    const coverage: Coverage = source === "fifa" ? "full" : "window";
     // Pre-link ESPN refs now (decision doc: never map ids at failover time).
-    if (provider.activeSource === "fifa") {
+    if (source === "fifa") {
       try {
         linkSourceRefs(matches, await espn.fetchSchedule(lang));
       } catch {
         /* best-effort */
       }
     }
-    writeScheduleCache(matches, lang);
-    return { matches, staleAt: null };
+    writeScheduleCache(matches, lang, source, coverage);
+    return { matches, staleAt: null, coverage };
   } catch {
-    if (cached) return { matches: cached.matches, staleAt: cached.fetchedAt };
-    return { matches: [], staleAt: null };
+    if (cached)
+      return {
+        matches: cached.matches,
+        staleAt: cached.fetchedAt,
+        coverage: cached.coverage,
+      };
+    return { matches: [], staleAt: null, coverage: "window" };
   }
+}
+
+/**
+ * The pre-v0.3 view: recent results + the coming week. Default/live flows
+ * keep this window; `schedule`/`bracket` show the whole tournament.
+ */
+function nearWindow(matches: Match[], now = Date.now()): Match[] {
+  const from = now - 36 * 3600_000;
+  const to = now + 8 * 86400_000;
+  return matches.filter((m) => {
+    const k = new Date(m.kickoff).getTime();
+    return k >= from && k <= to;
+  });
 }
 
 function findMatch(matches: Match[], ident: string): Match | null {
@@ -209,12 +273,26 @@ function findMatch(matches: Match[], ident: string): Match | null {
   );
 }
 
-async function watch(
+async function enterMatch(
   match: Match,
   provider: FailoverProvider,
+  espn: EspnProvider,
   lang: Lang,
   flags: Flags,
 ): Promise<void> {
+  // Lazy ESPN link: knockout slots are TBD-vs-TBD at schedule time, so the
+  // team-pair pre-link can't catch them. By watch time the teams are known —
+  // one one-day scoreboard call links the failover ref (best-effort).
+  if (!match.sourceRefs.espn && match.home.code !== "TBD") {
+    try {
+      linkSourceRefs(
+        [match],
+        await espn.fetchDaySchedule(new Date(match.kickoff), lang),
+      );
+    } catch {
+      /* best-effort */
+    }
+  }
   const lambdas = await fetchPreMatchLambdas(match);
   const engine = new PollingEngine(provider, match, lang);
   let recorder: ReplayRecorder | null = null;
