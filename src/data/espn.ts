@@ -1,4 +1,3 @@
-import { eventSentence } from "../core/i18n.js";
 import {
   parseMatchMinute,
   type EventType,
@@ -227,10 +226,6 @@ export class EspnProvider implements MatchDataProvider {
           ? { teamSide, teamCode: match[teamSide].code }
           : {}),
         ...(player ? { player } : {}),
-        text: eventSentence({ type }, lang, {
-          player,
-          team: teamSide ? match[teamSide].name : teamName,
-        }),
         source: "espn",
         seq: i,
       };

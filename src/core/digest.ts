@@ -1,7 +1,6 @@
 import {
   compareEvents,
   type EventType,
-  type Lang,
   type MatchPhase,
   type MatchState,
   type SourceName,
@@ -131,22 +130,20 @@ export function deriveHighlights(
 export function synthesizeAddedTime(
   prev: MatchState | null,
   next: MatchState,
-  opts: { lang: Lang; source: SourceName },
+  opts: { source: SourceName },
 ): TimelineEvent | null {
   if (!next.injury || next.injury <= 0) return null;
   const samePhaseAlreadyAnnounced =
     prev !== null && prev.phase === next.phase && !!prev.injury;
   if (samePhaseAlreadyAnnounced) return null;
-  const text =
-    opts.lang === "ko"
-      ? `추가시간 +${next.injury}분`
-      : `+${next.injury} minutes added`;
   return {
     id: `local:added-time-${next.phase}`,
     type: "ADDED_TIME",
     minute: next.minute,
+    // the announced amount rides the injury field — sentences are rendered
+    // from it at view time (and recordings keep the structured fact)
+    injury: next.injury,
     period: fifaPeriodOf(next.phase),
-    text,
     source: opts.source,
     seq: 0,
   };

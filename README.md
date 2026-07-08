@@ -48,18 +48,28 @@ termfc replay [file]       replay a recorded match (no arg: list recordings)
 termfc demo                bundled offline demo match
 
 --lang ko|en               commentary language (default: ko, persisted)
+--tone official|community|brief
+                           commentary tone, Korean only (persisted)
 --speed N                  replay/demo speed multiplier
 --no-anim                  skip entrance/goal animations
 --no-record                don't record watched matches
 ```
 
-While watching: `q` quit · `s` skip animation.
+While watching: `q` quit · `t` cycle tone · `s` skip animation.
 
 ## What you get
 
 - **Live commentary** — every shot, save, corner, foul, card, VAR call and
-  goal, timestamped with the match clock (`90'+1'`), in Korean (FIFA's
-  official Korean feed) or English.
+  goal, timestamped with the match clock (`90'+1'`), in Korean or English.
+  Sentences are generated locally from the structured match facts.
+- **Tone presets (Korean)** — pick how the commentary talks and switch live
+  with the `t` key, re-rendering the whole log: `official` (방송 문어체,
+  `골! Mikel Merino! 스페인이 앞서갑니다 0:1`), `community` (커뮤니티 순한맛,
+  `메리노 골!!! 이 시간에 터지네요`), `brief` (위젯 미니멀, `⚽ 메리노 (0:1)`).
+  Community/brief transliterate player names to Hangul (rule engine + a
+  curated table for well-known names). All templates pass a banned-lexicon
+  test gate: no profanity, no mockery, sensitive moments (own goals, missed
+  penalties, red cards) stay neutral in every tone.
 - **Readable over 90 minutes** — routine events older than ~15 match-minutes
   fold away automatically (goals, cards, subs and VAR always stay), a
   highlight strip under the score pins the key moments (`⚽90'+1' Merino`),
@@ -94,11 +104,13 @@ espn.com use in the browser. It is **not affiliated with or endorsed by FIFA
 or ESPN**. These endpoints are undocumented and may change or disappear at
 any time — the adapter layer isolates that risk, and polling is deliberately
 polite (~10s intervals, identified User-Agent). Match facts (scores, times,
-events) are not copyrightable, and no FIFA/ESPN prose ships with this
-package or repo: ESPN-fallback sentences are always generated locally from
-structured event data, and the bundled demo match and recorded test fixtures
-carry locally synthesized sentences too (`scripts/sanitize-fixtures.mjs`).
-FIFA's own feed text only appears live on screen while you watch.
+events) are not copyrightable, and no FIFA/ESPN prose is displayed,
+recorded or shipped anywhere: every sentence you see — live, replay or
+demo, in any tone — is generated locally from structured event data. Feed
+text is used only as a parse source for facts (player names, substitutions)
+inside the adapters; recordings and the bundled demo store structured facts,
+never prose (`scripts/sanitize-fixtures.mjs` keeps the test fixtures clean
+the same way).
 
 ## Development
 

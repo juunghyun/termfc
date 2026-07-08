@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import * as readline from "node:readline";
 import { ClockInterpolator, formatClock } from "../core/clock.js";
-import { EVENT_ICON, labels, type Labels } from "../core/i18n.js";
+import { enEventSentence, EVENT_ICON, labels, type Labels } from "../core/i18n.js";
 import {
   BOUNDARY_PHASES,
   boundaryPhaseOf,
@@ -19,9 +19,11 @@ import {
   type TimelineEvent,
 } from "../core/model.js";
 import { phaseLabel } from "../core/state.js";
+import { hangulSurname } from "../core/hangul.js";
+import { TONES, toneSentence, type Tone } from "../core/tone.js";
 import { liveWinProb, type WinProb } from "../core/winprob.js";
 import type { NetInfo } from "../engine/polling.js";
-import { normalizeEventText, normalizePlayerName } from "../core/text.js";
+import { normalizePlayerName } from "../core/text.js";
 import {
   bgYellow,
   bold,
@@ -62,9 +64,13 @@ const SYSTEM_TYPES: ReadonlySet<TimelineEvent["type"]> = new Set([
 ]);
 
 /** Log entries are stored structured and formatted at render time, so
- * alignment follows the current terminal width (and resizes). */
+ * alignment follows the current terminal width (and resizes) and the whole
+ * log re-renders in a new tone when the user toggles it. `score` captures
+ * the score at receive time for events whose sentence quotes it (goals,
+ * full-time) — ESPN goals carry no scoreAfter of their own. */
 type LogLine =
-  | { kind: "event"; e: TimelineEvent }
+  | { kind: "event"; e: TimelineEvent; score?: Score }
+  | { kind: "cancelled"; e: TimelineEvent }
   | { kind: "text"; text: string; align?: "left" | "center" }
   | { kind: "sep" }
   | { kind: "boundary"; phase: MatchPhase; score: Score };
@@ -73,6 +79,7 @@ export interface MatchScreenOptions {
   lang: Lang;
   mode: "live" | "replay";
   animations: boolean;
+  tone?: Tone;
   clockRate?: number;
   speedLabel?: string;
   lambdas?: { lh: number; la: number } | null;
@@ -103,6 +110,7 @@ export class MatchScreen {
   private cancelledIds = new Set<string>();
   private boundariesMarked = new Set<MatchPhase>();
   private lastPhase: MatchPhase | null = null;
+  private tone: Tone;
 
   constructor(
     private readonly match: Match,
@@ -110,6 +118,7 @@ export class MatchScreen {
     private readonly opts: MatchScreenOptions,
   ) {
     this.l = labels(opts.lang);
+    this.tone = opts.tone ?? "official";
     this.clock = new ClockInterpolator(undefined, opts.clockRate ?? 1);
     this.controller = new AnimationController((frame) => {
       const pad = Math.max(0, Math.floor((this.t.rows() - frame.length) / 2));
@@ -120,7 +129,8 @@ export class MatchScreen {
     }
   }
 
-  async run(): Promise<void> {
+  /** Resolves with the tone in effect at exit (caller may persist it). */
+  async run(): Promise<Tone> {
     const { out } = this.t;
     enterAltScreen(out);
     const input = process.stdin;
@@ -137,6 +147,10 @@ export class MatchScreen {
         resolveDone();
       } else if (name === "s") {
         this.controller.skip();
+      } else if (name === "t" && this.opts.lang === "ko") {
+        // cycle the tone and repaint the whole log in it (ko-only feature)
+        this.tone = TONES[(TONES.indexOf(this.tone) + 1) % TONES.length]!;
+        this.render();
       } else if (this.finished) {
         resolveDone();
       }
@@ -165,6 +179,7 @@ export class MatchScreen {
     input.pause();
     this.feed.stop();
     leaveAltScreen(out);
+    return this.tone;
   }
 
   private subscribe(): void {
@@ -189,11 +204,16 @@ export class MatchScreen {
       this.opts.onEvents?.(events);
       const entries: LogLine[] = [];
       for (const e of events) {
-        if (e.type === "ASSIST" && !e.text) continue; // assists render as text lines too
         const isGoal =
           e.type === "GOAL" || e.type === "PENALTY_GOAL" || e.type === "OWN_GOAL";
+        // capture the score for sentences that quote it — deterministic
+        // across re-renders and tone toggles
+        const score =
+          isGoal || e.type === "FULLTIME"
+            ? (e.scoreAfter ?? this.state?.score ?? this.match.score)
+            : undefined;
         if (isGoal) entries.push({ kind: "sep" });
-        entries.push({ kind: "event", e });
+        entries.push({ kind: "event", e, ...(score ? { score: { ...score } } : {}) });
         if (isGoal) entries.push({ kind: "sep" });
       }
       this.keyEvents.push(...events);
@@ -241,8 +261,7 @@ export class MatchScreen {
 
     this.feed.on("cancelled", (e: TimelineEvent) => {
       this.cancelledIds.add(e.id); // strip drops the disallowed goal
-      const line = `${dim(formatEventClock(e).padStart(7))}  ${red(`📺 ${this.l.goalCancelled} (${this.l.corrected})`)} ${dim(e.text ? normalizeEventText(e.text) : "")}`;
-      this.pushLine({ kind: "text", text: line });
+      this.pushLine({ kind: "cancelled", e });
     });
 
     this.feed.on("sourceSwitched", () => {
@@ -288,9 +307,19 @@ export class MatchScreen {
     }
   }
 
-  private formatEvent(e: TimelineEvent, cols: number): string {
+  /** Render-time sentence: ko follows the active tone, en keeps one register. */
+  private sentence(e: TimelineEvent, score?: Score): string {
+    const team = e.teamSide ? this.match[e.teamSide].name : undefined;
+    if (this.opts.lang === "ko") return toneSentence(e, this.tone, { team, score });
+    return enEventSentence(e, {
+      player: e.player ? normalizePlayerName(e.player) : undefined,
+      team,
+    });
+  }
+
+  private formatEvent(e: TimelineEvent, cols: number, score?: Score): string {
     const icon = EVENT_ICON[e.type] ?? "·";
-    let text = e.text ? normalizeEventText(e.text) : "";
+    let text = this.sentence(e, score);
     if (e.type === "GOAL" || e.type === "PENALTY_GOAL" || e.type === "OWN_GOAL")
       text = bold(yellow(text));
     else if (e.type === "RED") text = bold(red(text));
@@ -326,7 +355,11 @@ export class MatchScreen {
       );
     }
     if (l.kind === "text") return l.align === "center" ? center(l.text, cols) : l.text;
-    return this.formatEvent(l.e, cols);
+    if (l.kind === "cancelled") {
+      const detail = this.sentence(l.e);
+      return `${dim(formatEventClock(l.e).padStart(7))}  ${red(`📺 ${this.l.goalCancelled} (${this.l.corrected})`)} ${dim(detail)}`;
+    }
+    return this.formatEvent(l.e, cols, l.score);
   }
 
   /**
@@ -338,8 +371,13 @@ export class MatchScreen {
     if (items.length === 0) return "";
     const parts = items.map((e) => {
       const icon = EVENT_ICON[e.type] ?? "";
-      const who = e.player
+      const surname = e.player
         ? (normalizePlayerName(e.player).split(" ").pop() ?? "")
+        : "";
+      const who = surname
+        ? this.tone === "official"
+          ? surname
+          : hangulSurname(surname)
         : (e.teamCode ?? "");
       return `${icon}${formatEventClock(e)} ${who}`.trim();
     });

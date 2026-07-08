@@ -4,10 +4,12 @@
  * FIFA fixtures: Portugal 0-1 Spain, Round of 16, 2026-07-06.
  * Normalization mirrors src/data/fifa.ts (kept minimal on purpose).
  *
- * Event sentences are NOT copied from the source feed — they are synthesized
- * from structured facts via the shared templates in sanitize-fixtures.mjs,
- * so the npm package never redistributes FIFA prose. If fixtures were
- * re-recorded, run `node scripts/sanitize-fixtures.mjs` first.
+ * As of v0.4 demo events carry NO text at all — sentences are rendered from
+ * the structured facts at view time (per the active tone preset), so the
+ * npm package never redistributes FIFA prose. This script's job is to
+ * extract those facts (player, sub in/out, assist taker) from the fixture
+ * prose and bake them as structured fields. If fixtures were re-recorded,
+ * run `node scripts/sanitize-fixtures.mjs` first.
  *
  * Usage: node scripts/make-demo.mjs
  */
@@ -16,7 +18,6 @@ import {
   assistPlayerFrom,
   playerFrom,
   subPlayersFrom,
-  synthDescription,
 } from "./sanitize-fixtures.mjs";
 
 const timeline = JSON.parse(
@@ -99,16 +100,13 @@ const events = timeline.Event.map((e, i) => {
   const srcText = e.EventDescription?.[0]?.Description ?? "";
   const teamSide =
     String(e.IdTeam) === homeId ? "home" : String(e.IdTeam) === awayId ? "away" : undefined;
-  const teamName = teamSide ? match[teamSide].name : undefined;
-  const player = PLAYER_TYPES.has(type) || type === "CORNER"
-    ? playerFrom(srcText)
-    : undefined;
-  const text = synthDescription(type, "ko", {
-    period: e.Period,
-    team: teamName,
-    player: type === "ASSIST" ? assistPlayerFrom(srcText) : player,
-    ...(type === "SUBSTITUTION" ? subPlayersFrom(srcText) : {}),
-  });
+  const player =
+    type === "ASSIST"
+      ? assistPlayerFrom(srcText)
+      : PLAYER_TYPES.has(type) || type === "CORNER"
+        ? playerFrom(srcText)
+        : undefined;
+  const sub = type === "SUBSTITUTION" ? subPlayersFrom(srcText) : {};
   const isGoal = type === "GOAL" || type === "OWN_GOAL" || type === "PENALTY_GOAL";
   return {
     id: `fifa:${e.EventId ?? i}`,
@@ -117,8 +115,8 @@ const events = timeline.Event.map((e, i) => {
     ...(injury !== undefined ? { injury } : {}),
     period: e.Period,
     ...(teamSide ? { teamSide, teamCode: match[teamSide].code } : {}),
-    ...(player && PLAYER_TYPES.has(type) ? { player } : {}),
-    text,
+    ...(player ? { player } : {}),
+    ...(sub.inP ? { playerIn: sub.inP, playerOut: sub.outP } : {}),
     ...(isGoal && typeof e.HomeGoals === "number"
       ? { scoreAfter: { home: e.HomeGoals, away: e.AwayGoals } }
       : {}),

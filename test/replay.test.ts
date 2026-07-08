@@ -29,6 +29,42 @@ const ev = (
   ...over,
 });
 
+describe("parseReplay enriches pre-v0.4 recordings from stored prose", () => {
+  const header = JSON.stringify({ kind: "termfc-replay", v: 1, match });
+  const line = (e: object) => JSON.stringify(e);
+
+  it("promotes sub/assist/added-time facts and cleans the referee wart", () => {
+    const content = [
+      header,
+      line({
+        ...ev("s1", { type: "SUBSTITUTION", minute: 56, teamSide: "home" }),
+        text: "NELSON SEMEDO (in) 선수가 NUNO MENDES(교체)(포르투갈) 선수 대신 교체되어 경기장에 들어갑니다.",
+      }),
+      line({
+        ...ev("a1", { type: "ASSIST", minute: 90 }),
+        text: "Ferran TORRES 선수의 어시스트입니다.",
+      }),
+      line({
+        ...ev("y1", { type: "YELLOW", minute: 89, teamSide: "home" }),
+        player: "주심이 BERNARDO SILVA",
+        text: "주심이 BERNARDO SILVA (포르투갈) 에게 경고 조치를 합니다.",
+      }),
+      line({
+        ...ev("t1", { type: "ADDED_TIME", minute: 90 }),
+        text: "추가시간 +4분",
+      }),
+    ].join("\n");
+
+    const parsed = parseReplay(content);
+    const byType = (t: string) => parsed.events.find((e) => e.type === t)!;
+    expect(byType("SUBSTITUTION").playerIn).toBe("NELSON SEMEDO");
+    expect(byType("SUBSTITUTION").playerOut).toBe("NUNO MENDES");
+    expect(byType("ASSIST").player).toBe("Ferran TORRES");
+    expect(byType("YELLOW").player).toBe("BERNARDO SILVA");
+    expect(byType("ADDED_TIME").injury).toBe(4);
+  });
+});
+
 describe("recorder + player round-trip", () => {
   it("records JSONL and replays events in clock order", async () => {
     const dir = mkdtempSync(join(tmpdir(), "termfc-test-"));

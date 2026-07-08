@@ -182,7 +182,6 @@ export class PollingEngine extends EventEmitter {
         // from the injury field, once per phase (bypasses the differ: local
         // events are never subject to source-switch cancellation).
         const addedTime = synthesizeAddedTime(this.prevState, state, {
-          lang: this.lang,
           source: this.provider.name,
         });
         this.prevState = state;

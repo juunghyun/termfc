@@ -24,7 +24,7 @@ export const LABELS = {
     sourceSwitched: "데이터 소스 전환 — 백업 소스로 중계를 계속합니다",
     corrected: "정정",
     goalCancelled: "골 취소",
-    quitHint: "q 종료 · s 애니메이션 건너뛰기",
+    quitHint: "q 종료 · t 말투 · s 애니메이션 건너뛰기",
     pickPrompt: "번호를 입력해 경기에 입장하세요 (q 종료): ",
     schedule: "경기 일정",
     liveNow: "진행 중",
@@ -128,96 +128,48 @@ interface SentenceCtx {
 }
 
 /**
- * Template sentence generator. Used for events that carry no source-provided
- * text in the requested language (i.e. the ESPN fallback source — we do not
- * redistribute ESPN's verbatim commentary; we generate our own from the
- * structured event data).
+ * English sentence generator, applied at render time for en sessions.
+ * (Korean sentences come from the tone presets in core/tone.ts — the tone
+ * feature is ko-only, en keeps this single register.) Generated from
+ * structured facts; no source prose is ever displayed or redistributed.
  */
-export function eventSentence(
-  e: Pick<TimelineEvent, "type">,
-  lang: Lang,
+export function enEventSentence(
+  e: Pick<TimelineEvent, "type" | "playerIn" | "playerOut" | "injury">,
   ctx: SentenceCtx = {},
 ): string {
-  const who = ctx.player;
+  const who = ctx.player
+    ? `${ctx.player}${ctx.team ? ` (${ctx.team})` : ""}`
+    : (ctx.team ?? "");
   const team = ctx.team;
-  const koWho = who ? `${who}${team ? ` (${team})` : ""}` : (team ?? "");
-  const enWho = who ? `${who}${team ? ` (${team})` : ""}` : (team ?? "");
-
-  if (lang === "ko") {
-    switch (e.type) {
-      case "GOAL":
-        return koWho ? `골! ${koWho} 득점!` : "골!";
-      case "OWN_GOAL":
-        return koWho ? `자책골! ${koWho}` : "자책골!";
-      case "PENALTY_GOAL":
-        return koWho ? `${koWho} 페널티킥 성공!` : "페널티킥 성공!";
-      case "PENALTY_MISS":
-        return koWho ? `${koWho} 페널티킥 실축` : "페널티킥 실축";
-      case "ASSIST":
-        return koWho ? `${koWho} 어시스트` : "어시스트";
-      case "SHOT":
-        return koWho ? `${koWho} 슈팅 시도` : "슈팅 시도";
-      case "SAVE":
-        return team ? `${team} 골키퍼 선방` : "골키퍼 선방";
-      case "FOUL":
-        return koWho ? `${koWho} 파울` : "파울";
-      case "YELLOW":
-        return koWho ? `${koWho} 경고 (옐로카드)` : "경고 (옐로카드)";
-      case "RED":
-        return koWho ? `${koWho} 퇴장! (레드카드)` : "퇴장! (레드카드)";
-      case "CORNER":
-        return team ? `${team} 코너킥` : "코너킥";
-      case "OFFSIDE":
-        return koWho ? `${koWho} 오프사이드` : "오프사이드";
-      case "SUBSTITUTION":
-        return team ? `${team} 선수 교체` : "선수 교체";
-      case "VAR":
-        return "VAR 판독 중";
-      case "PERIOD_START":
-        return "경기 시작 휘슬";
-      case "PERIOD_END":
-        return "종료 휘슬";
-      case "FULLTIME":
-        return "경기 종료";
-      case "COIN_TOSS":
-        return "동전 던지기";
-      case "BREAK":
-        return "경기 일시 중단";
-      case "RESUMED":
-        return "경기 재개";
-      case "ADDED_TIME":
-        return "추가시간 표시";
-      default:
-        return "경기 상황";
-    }
-  }
 
   switch (e.type) {
     case "GOAL":
-      return enWho ? `Goal! ${enWho} scores!` : "Goal!";
+      return who ? `Goal! ${who} scores!` : "Goal!";
     case "OWN_GOAL":
-      return enWho ? `Own goal by ${enWho}` : "Own goal";
+      return who ? `Own goal by ${who}` : "Own goal";
     case "PENALTY_GOAL":
-      return enWho ? `${enWho} converts the penalty!` : "Penalty scored!";
+      return who ? `${who} converts the penalty!` : "Penalty scored!";
     case "PENALTY_MISS":
-      return enWho ? `${enWho} misses the penalty` : "Penalty missed";
+      return who ? `${who} misses the penalty` : "Penalty missed";
     case "ASSIST":
-      return enWho ? `Assisted by ${enWho}` : "Assist";
+      return who ? `Assisted by ${who}` : "Assist";
     case "SHOT":
-      return enWho ? `${enWho} attempts a shot` : "Shot attempt";
+      return who ? `${who} attempts a shot` : "Shot attempt";
     case "SAVE":
       return team ? `Save by the ${team} goalkeeper` : "Goalkeeper save";
     case "FOUL":
-      return enWho ? `Foul by ${enWho}` : "Foul";
+      return who ? `Foul by ${who}` : "Foul";
     case "YELLOW":
-      return enWho ? `${enWho} is booked` : "Yellow card";
+      return who ? `${who} is booked` : "Yellow card";
     case "RED":
-      return enWho ? `${enWho} is sent off!` : "Red card!";
+      return who ? `${who} is sent off!` : "Red card!";
     case "CORNER":
       return team ? `Corner kick for ${team}` : "Corner kick";
     case "OFFSIDE":
-      return enWho ? `${enWho} is offside` : "Offside";
+      return who ? `${who} is offside` : "Offside";
     case "SUBSTITUTION":
+      if (e.playerIn && e.playerOut)
+        return `Substitution${team ? ` (${team})` : ""}: ${e.playerIn} in, ${e.playerOut} out`;
       return team ? `Substitution for ${team}` : "Substitution";
     case "VAR":
       return "VAR review";
@@ -234,7 +186,7 @@ export function eventSentence(
     case "RESUMED":
       return "Match resumed";
     case "ADDED_TIME":
-      return "Added time signalled";
+      return e.injury ? `+${e.injury} minutes added` : "Added time signalled";
     default:
       return "Match event";
   }

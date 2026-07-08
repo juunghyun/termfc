@@ -7,6 +7,7 @@ import {
   type Match,
   type TimelineEvent,
 } from "../core/model.js";
+import { isTone, type Tone } from "../core/tone.js";
 import { EspnProvider } from "../data/espn.js";
 import { FailoverProvider, linkSourceRefs } from "../data/failover.js";
 import { FifaProvider } from "../data/fifa.js";
@@ -22,6 +23,7 @@ import {
   REPLAY_DIR,
   writeConfig,
   writeScheduleCache,
+  type Config,
   type Coverage,
 } from "../store/store.js";
 import { bold, cyan, dim, red, yellow } from "../ui/ansi.js";
@@ -33,6 +35,7 @@ import pkg from "../../package.json" with { type: "json" };
 
 interface Flags {
   lang?: Lang;
+  tone?: Tone;
   speed?: number;
   anim: boolean;
   record: boolean;
@@ -49,6 +52,12 @@ function parseArgv(argv: string[]): { cmd?: string; args: string[]; flags: Flags
     } else if (a.startsWith("--lang=")) {
       const v = a.slice(7);
       if (v === "ko" || v === "en") flags.lang = v;
+    } else if (a === "--tone") {
+      const v = argv[++i];
+      if (isTone(v)) flags.tone = v;
+    } else if (a.startsWith("--tone=")) {
+      const v = a.slice(7);
+      if (isTone(v)) flags.tone = v;
     } else if (a === "--speed") {
       flags.speed = Number(argv[++i]);
     } else if (a.startsWith("--speed=")) {
@@ -78,6 +87,7 @@ const HELP = `
 
   ${bold("options")}
     --lang ko|en               ${dim("commentary language (default: ko, persisted)")}
+    --tone official|community|brief  ${dim("commentary tone, ko only (persisted; t key toggles)")}
     --speed N                  ${dim("replay/demo speed multiplier")}
     --no-anim                  ${dim("skip entrance/goal animations")}
     --no-record                ${dim("don't record watched matches for replay")}
@@ -87,9 +97,16 @@ async function main(): Promise<void> {
   const { cmd, args, flags } = parseArgv(process.argv.slice(2));
   const config = readConfig();
   const lang: Lang = flags.lang ?? config.lang ?? "ko";
-  if (flags.lang && flags.lang !== config.lang) {
+  // Unknown stored values (edited by hand / written by a future version)
+  // degrade to the default instead of leaking into rendering.
+  flags.tone =
+    flags.tone ?? (isTone(config.tone) ? config.tone : undefined) ?? "official";
+  const persist: Partial<Config> = {};
+  if (flags.lang && flags.lang !== config.lang) persist.lang = flags.lang;
+  if (flags.tone !== (config.tone ?? "official")) persist.tone = flags.tone;
+  if (Object.keys(persist).length > 0) {
     try {
-      writeConfig({ ...config, lang: flags.lang });
+      writeConfig({ ...config, ...persist });
     } catch {
       /* non-fatal */
     }
@@ -307,11 +324,23 @@ async function enterMatch(
     lang,
     mode: "live",
     animations: flags.anim,
+    tone: flags.tone,
     lambdas,
     sourceLabel: () => provider.activeSource.toUpperCase(),
     onEvents: (events: TimelineEvent[]) => recorder?.append(events),
   });
-  await screen.run();
+  persistTone(await screen.run());
+}
+
+/** A tone settled on via the t toggle survives into the next run. */
+function persistTone(finalTone: Tone): void {
+  try {
+    const cfg = readConfig();
+    if ((cfg.tone ?? "official") === finalTone) return;
+    writeConfig({ ...cfg, tone: finalTone });
+  } catch {
+    /* non-fatal */
+  }
 }
 
 async function replayCommand(
@@ -368,12 +397,13 @@ async function runReplay(
     lang,
     mode: "replay",
     animations: flags.anim,
+    tone: flags.tone,
     clockRate: speed,
     speedLabel: String(speed),
     lambdas: null,
     sourceLabel: () => `${parsed.events[0]?.source ?? "fifa"} replay`,
   });
-  await screen.run();
+  persistTone(await screen.run());
 }
 
 main()

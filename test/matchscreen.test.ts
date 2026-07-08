@@ -81,3 +81,65 @@ describe("MatchScreen period-boundary blocks (readability c)", () => {
     expect(marks[1].score).toEqual({ home: 2, away: 1 });
   });
 });
+
+describe("MatchScreen tone rendering (v0.4)", () => {
+  beforeEach(() => {
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const goal: TimelineEvent = {
+    id: "fifa:g1",
+    type: "GOAL",
+    minute: 45,
+    teamSide: "home",
+    player: "Kylian MBAPPE",
+    source: "fifa",
+    seq: 1,
+  };
+
+  it("captures the receive-time score on goal lines (ESPN goals lack scoreAfter)", () => {
+    const { feed, screen } = makeScreen();
+    feed.emit("state", state({ score: { home: 1, away: 0 } }));
+    feed.emit("events", [goal]);
+    const line = (screen as any).lines.find(
+      (l: { kind: string }) => l.kind === "event",
+    );
+    expect(line.score).toEqual({ home: 1, away: 0 });
+  });
+
+  it("re-renders the same stored line in the toggled tone", () => {
+    const { feed, screen } = makeScreen();
+    feed.emit("state", state({ score: { home: 1, away: 0 } }));
+    feed.emit("events", [goal]);
+    const line = (screen as any).lines.find(
+      (l: { kind: string }) => l.kind === "event",
+    );
+    const official = (screen as any).renderLine(line, 100) as string;
+    expect(official).toContain("Kylian Mbappe");
+    expect(official).toContain("프랑스가 앞서갑니다 1:0");
+
+    (screen as any).tone = "community";
+    const community = (screen as any).renderLine(line, 100) as string;
+    expect(community).toContain("음바페");
+    expect(community).not.toContain("Mbappe");
+
+    (screen as any).tone = "brief";
+    const brief = (screen as any).renderLine(line, 100) as string;
+    expect(brief).toContain("음바페 (1:0)");
+  });
+
+  it("keeps cancelled-goal notices structured and tone-rendered", () => {
+    const { feed, screen } = makeScreen();
+    feed.emit("state", state({}));
+    feed.emit("cancelled", goal);
+    const line = (screen as any).lines.find(
+      (l: { kind: string }) => l.kind === "cancelled",
+    );
+    expect(line).toBeDefined();
+    const rendered = (screen as any).renderLine(line, 120) as string;
+    expect(rendered).toContain("골 취소");
+  });
+});

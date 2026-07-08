@@ -1,4 +1,8 @@
-import { eventSentence } from "../core/i18n.js";
+import {
+  assistPlayerFrom,
+  leadingPlayerFrom,
+  subPlayersFrom,
+} from "../core/factextract.js";
 import {
   parseMatchMinute,
   type EventType,
@@ -129,6 +133,7 @@ function normalizeMatch(m: any): Match {
   return match;
 }
 
+/** Types whose FIFA prose leads with "PLAYER (TEAM)" — actor extractable. */
 const PLAYER_TYPES: ReadonlySet<EventType> = new Set([
   "GOAL",
   "OWN_GOAL",
@@ -139,13 +144,8 @@ const PLAYER_TYPES: ReadonlySet<EventType> = new Set([
   "SHOT",
   "OFFSIDE",
   "FOUL",
+  "CORNER",
 ]);
-
-function extractPlayer(text: string | undefined): string | undefined {
-  if (!text) return undefined;
-  const m = /^(.{2,40}?)\s*\(/.exec(text);
-  return m?.[1]?.trim() || undefined;
-}
 
 export class FifaProvider implements MatchDataProvider {
   readonly name = "fifa" as const;
@@ -234,6 +234,9 @@ export class FifaProvider implements MatchDataProvider {
     return data.Event.map((e: any, i: number): TimelineEvent => {
       const type = (map[String(e.Type)] ?? "UNKNOWN") as EventType;
       const { minute, injury } = parseMatchMinute(e.MatchMinute);
+      // Feed prose is a parse source only: facts are extracted here and the
+      // sentence never leaves this function — display text is rendered from
+      // structure at view time (and recordings stay prose-free).
       const text: string | undefined =
         e.EventDescription?.[0]?.Description || undefined;
       const teamSide =
@@ -244,6 +247,13 @@ export class FifaProvider implements MatchDataProvider {
             : undefined;
       const isGoal =
         type === "GOAL" || type === "OWN_GOAL" || type === "PENALTY_GOAL";
+      const player =
+        type === "ASSIST"
+          ? assistPlayerFrom(text)
+          : PLAYER_TYPES.has(type)
+            ? leadingPlayerFrom(text)
+            : undefined;
+      const sub = type === "SUBSTITUTION" ? subPlayersFrom(text) : undefined;
       return {
         id: `fifa:${e.EventId ?? `${e.Type}-${e.MatchMinute}-${i}`}`,
         type,
@@ -254,14 +264,8 @@ export class FifaProvider implements MatchDataProvider {
           ? { teamCode: teamSide ? match[teamSide].code : String(e.IdTeam) }
           : {}),
         ...(teamSide ? { teamSide } : {}),
-        ...(PLAYER_TYPES.has(type)
-          ? { player: extractPlayer(text) }
-          : {}),
-        text:
-          text ??
-          eventSentence({ type }, lang, {
-            team: teamSide ? match[teamSide].name : undefined,
-          }),
+        ...(player ? { player } : {}),
+        ...(sub ? { playerIn: sub.playerIn, playerOut: sub.playerOut } : {}),
         ...(isGoal && typeof e.HomeGoals === "number"
           ? { scoreAfter: { home: e.HomeGoals, away: e.AwayGoals } }
           : {}),
