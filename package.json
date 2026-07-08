@@ -1,6 +1,6 @@
 {
   "name": "termfc",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "⚽ Live football text commentary in your terminal — FIFA World Cup 2026",
   "type": "module",
   "bin": {
