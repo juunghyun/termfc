@@ -1,0 +1,44 @@
+name: Release
+
+# v* 태그 push → 테스트 → npm publish → GitHub Release 생성.
+# npm 인증은 Trusted Publishing(OIDC) 전제 — npmjs.com의 termfc 패키지 설정에서
+# GitHub Actions(juunghyun/termfc, release.yml)를 trusted publisher로 등록해야 한다.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write # GitHub Release 생성
+  id-token: write # npm Trusted Publishing(OIDC) + provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # npm >= 11.5 (trusted publishing 지원)
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm ci
+
+      - name: Guard — 태그와 package.json 버전 일치 확인
+        run: |
+          pkg="v$(node -p "require('./package.json').version")"
+          if [ "$pkg" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME != package.json $pkg"
+            exit 1
+          fi
+
+      - run: npm run build
+      - run: npx tsc --noEmit
+      - run: npm test
+
+      # prepublishOnly(build + test)가 한 번 더 돌지만 안전망으로 그대로 둔다
+      - run: npm publish
+
+      - name: GitHub Release 생성
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --verify-tag
