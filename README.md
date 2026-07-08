@@ -1,5 +1,12 @@
 # ⚽ termfc
-
+```
+████████╗███████╗██████╗ ███╗   ███╗███████╗ ██████╗
+╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██╔════╝██╔════╝
+   ██║   █████╗  ██████╔╝██╔████╔██║█████╗  ██║
+   ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══╝  ██║
+   ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║      ██████╗
+   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝      ╚═════╝
+```
 [![CI](https://github.com/juunghyun/termfc/actions/workflows/ci.yml/badge.svg)](https://github.com/juunghyun/termfc/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/termfc)](https://www.npmjs.com/package/termfc)
 
@@ -10,15 +17,6 @@ English, goal celebrations in ASCII — plus the full tournament bracket, group
 standings and a kick-off waiting room, without leaving your terminal.
 
 ![termfc demo](https://raw.githubusercontent.com/juunghyun/termfc/main/docs/demo.gif)
-
-```
-████████╗███████╗██████╗ ███╗   ███╗███████╗ ██████╗
-╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██╔════╝██╔════╝
-   ██║   █████╗  ██████╔╝██╔████╔██║█████╗  ██║
-   ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══╝  ██║
-   ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║      ██████╗
-   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝      ╚═════╝
-```
 
 ## Quick start
 
