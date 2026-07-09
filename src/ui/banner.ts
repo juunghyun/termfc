@@ -15,8 +15,8 @@ export function renderBanner(version: string): string {
   ).join("\n");
   const info = [
     "",
-    `  ⚽ ${bold("termfc")} v${version} — FIFA World Cup 2026™ live text commentary`,
-    dim("     data: fifa.com (primary) · espn.com (fallback) · unofficial public endpoints"),
+    `  ⚽ ${bold("termfc")} v${version} — unofficial World Cup 2026 live text commentary`,
+    dim("     not affiliated with FIFA/ESPN · data: fifa.com (primary) · espn.com (fallback)"),
     "",
   ].join("\n");
   return `\n${colored}${info}`;
