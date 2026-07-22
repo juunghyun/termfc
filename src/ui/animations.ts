@@ -113,7 +113,7 @@ export function goalFrames(opts: {
 
 /** Match-entry animation: World Cup trophy + both flags + tie line. */
 export function entranceFrames(match: Match, cols: number): string[][] {
-  const title = "FIFA WORLD CUP 2026™";
+  const title = "WORLD CUP 2026";
   const tie = `${match.home.flag}  ${match.home.name}   VS   ${match.away.name}  ${match.away.flag}`;
   const stage = match.stage;
   const full = [

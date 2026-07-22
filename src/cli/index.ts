@@ -74,7 +74,7 @@ function parseArgv(argv: string[]): { cmd?: string; args: string[]; flags: Flags
 }
 
 const HELP = `
-  ${bold("termfc")} — FIFA World Cup 2026 live text commentary in your terminal
+  ${bold("termfc")} — unofficial World Cup 2026 live text commentary in your terminal
 
   ${bold("usage")}
     termfc                     ${dim("live + upcoming matches, pick one to join")}

@@ -10,7 +10,8 @@
 [![CI](https://github.com/juunghyun/termfc/actions/workflows/ci.yml/badge.svg)](https://github.com/juunghyun/termfc/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/termfc)](https://www.npmjs.com/package/termfc)
 
-**FIFA World Cup 2026™ live text commentary in your terminal.**
+**Unofficial live text commentary for the 2026 World Cup, in your terminal.**
+Not affiliated with or endorsed by FIFA or ESPN.
 
 Live scores, a ticking match clock, minute-by-minute commentary in Korean or
 English, goal celebrations in ASCII — plus the full tournament bracket, group
@@ -32,7 +33,8 @@ npm i -g termfc
 termfc
 ```
 
-Requires Node.js >= 20. Zero runtime dependencies (single bundled file).
+Requires Node.js >= 20. Nothing else to install — a single self-contained
+file (a few tiny MIT libraries are bundled in; see `THIRD_PARTY_NOTICES.md`).
 
 ## Usage
 
